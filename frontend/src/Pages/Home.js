@@ -1,28 +1,14 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-
-import Course from './Course'
+import Typography from '@material-ui/core/Typography';
 
 const Home = () => {
-    const courses = ['1', 'next']
-    
     return (
-        <div>
-            <div>
-                <TextField style={{padding: 24}}
-                    id="searchInput"
-                    placeholder="Search for Courses"   
-                    margin="normal"
-                    />
-                <Grid container spacing={24} style={{padding: 24}}>
-                    { courses.map(currentCourse => (
-                        <Grid item xs={12} sm={6} lg={4} xl={3}>
-                            <Course course={currentCourse} />
-                        </Grid>
-                    ))}
-                </Grid>
-            </div>
+        <div style={{padding: 25}}>
+            <Typography variant="h4" gutterBottom>
+              Home
+            </Typography>
+            Home content can go here. Go free.
+            <img alt='Home' style={{width: '96%', padding: '2%'}} src={'https://assets.entrepreneur.com/content/3x2/2000/20190914102314-CYBER22.jpeg'}/>
         </div>
     )
 }
