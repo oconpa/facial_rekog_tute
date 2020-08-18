@@ -1,45 +1,30 @@
-import React, { useEffect } from 'react';
-import AWS from 'aws-sdk';
-const albumBucketName = "facial-detection-pat";
-// const bucketRegion = "ap-southeast-2";
-// const IdentityPoolId = "IDENTITY_POOL_ID";
-const s3 = new AWS.S3();
+import React from 'react'
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 
+import Course from './Course'
 
-function App() {
-  
-  function listAlbums() {
-    s3.listObjects({ Bucket: albumBucketName }, function(err, data) {
-      if (err) {
-        return alert("There was an error listing your albums: " + err.message);
-      } else {
-        return alert(data);
-      }
-    });
-  }
-  
-  const test = event => {
-    const params = {
-      Bucket: 'facial-detection-pat',
-      Key: 'test',
-      Body: event.target.files[0]
-    }
-    s3.putObject(params, function(err, data) {
-      if (err) console.log(err, err.stack); // an error occurred
-      else     console.log(data);           // successful response
-    });
-  }
-  
-  useEffect(() => {
-    listAlbums()
-  })
-  
-  return (
-    <div className="App">
-      <p>Upload an image here to be processed</p>
-      <input type="file" onChange={test}/>
-    </div>
-  );
+const Home = () => {
+    const courses = ['1', 'next']
+    
+    return (
+        <div>
+            <div>
+                <TextField style={{padding: 24}}
+                    id="searchInput"
+                    placeholder="Search for Courses"   
+                    margin="normal"
+                    />
+                <Grid container spacing={24} style={{padding: 24}}>
+                    { courses.map(currentCourse => (
+                        <Grid item xs={12} sm={6} lg={4} xl={3}>
+                            <Course course={currentCourse} />
+                        </Grid>
+                    ))}
+                </Grid>
+            </div>
+        </div>
+    )
 }
 
-export default App;
+export default Home;
