@@ -1,37 +1,75 @@
-import React, {useCallback} from 'react'
-import {useDropzone} from 'react-dropzone'
+import React, { useState } from 'react'
 import Button from '@material-ui/core/Button';
+import axios from "axios";
+import ImageUploader from 'react-images-upload';
 
 function MyDropzone() {
-  const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader()
+  const [pictures, setPictures] = useState([])
+  const [image, setImage] = useState(false)
 
-      reader.onabort = () => console.log('file reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
-      reader.onload = () => {
-      // Do whatever you want with the file contents
-        const binaryStr = reader.result
-        console.log(binaryStr)
-      }
-      reader.readAsArrayBuffer(file)
-    })
-    
-  }, [])
-  const {getRootProps, getInputProps} = useDropzone({onDrop})
+  const onDrop = (event) => {
+    console.log(event[0])
+    setPictures(event)
+    setImage(true)
+    if (pictures.length > 0) {
+      console.log(pictures[0].name)
+    }
+  }
+
+  const uploadFile = () => {
+    axios(
+      "https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/test?fileName=" +
+            pictures[0].name
+    ).then(response => {
+        // Getting the url from response
+        console.log(response)
+        const url = response.data;
+
+        // Initiating the PUT request to upload file  
+        console.log(pictures[0])  
+        axios({
+            method: "PUT",
+            url: url,
+            data: pictures[0],
+            headers: { "Content-Type": "multipart/form-data" }
+        })
+            .then(res => {
+                // this.setState({
+                //     uploadSuccess: "File upload successfull",
+                //     error: undefined
+                // });
+                console.log(res)
+            })
+            .catch(err => {
+                // this.setState({
+                //     error: "Error Occured while uploading the file",
+                //     uploadSuccess: undefined
+                // });
+                console.log(err)
+            });
+    });
+}
 
   return (
-    <div>
-      <div style={{width: 500, height: 500, boxShadow: '0 0 8px 0 rgba(0,0,0,0.2)', margin: 'auto'}}
-        {...getRootProps()}>
-        <input {...getInputProps()} />
-        <p style={{padding: '10px', color: 'grey'}}>Drag 'n' drop an image here, or click to select</p>
-      </div>
-      <div style={{margin: 'auto', width: 100, paddingTop: 10}}>
-        <Button variant="contained" color="primary">
+    <div style={{width: 400, margin: 'auto'}}>
+      <ImageUploader
+        withPreview={true}
+        withIcon={true}
+        buttonText='Choose images'
+        onChange={onDrop}
+        imgExtension={['.jpg', '.gif', '.png']}
+        maxFileSize={5242880}
+        singleImage={true}
+      />
+      { image ?
+      <div style={{margin: 'auto', width: 100}}>
+        <Button variant="contained" color="primary" onClick={uploadFile}>
           Scan
         </Button>
       </div>
+      : null
+      }
+
     </div>
   )
 }
