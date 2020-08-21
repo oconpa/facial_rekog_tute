@@ -6,6 +6,7 @@ import ImageUploader from 'react-images-upload';
 function MyDropzone() {
   const [pictures, setPictures] = useState([])
   const [image, setImage] = useState(false)
+  const [scan, setScan] = useState([])
 
   const onDrop = (event) => {
     console.log(event[0])
@@ -18,7 +19,7 @@ function MyDropzone() {
 
   const uploadFile = () => {
     axios(
-      "https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/test?fileName=" +
+      "https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/upload?fileName=" +
             pictures[0].name
     ).then(response => {
         // Getting the url from response
@@ -34,11 +35,23 @@ function MyDropzone() {
             headers: { "Content-Type": "multipart/form-data" }
         })
             .then(res => {
+              axios({
+                method: "POST",
+                url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/detect',
+                data: pictures[0].name,
+              })
+              .then(res => {
+                console.log(res.data.FaceDetails)
+                setImage(false)
+                setScan(res.data.FaceDetails)
+              })
+              .catch(err => {
                 // this.setState({
-                //     uploadSuccess: "File upload successfull",
-                //     error: undefined
+                //     error: "Error Occured while uploading the file",
+                //     uploadSuccess: undefined
                 // });
-                console.log(res)
+                console.log(err)
+              });
             })
             .catch(err => {
                 // this.setState({
@@ -67,7 +80,20 @@ function MyDropzone() {
           Scan
         </Button>
       </div>
-      : null
+      : <div>{scan.map(x => {
+          console.log(x)
+          return(
+          <div>
+            <h2>Box Detection</h2>
+            {x.Emotions.map(y => {
+              console.log(y)
+              return(
+                <li>{y.Type.toString() + ', ' + y.Confidence.toString()}</li>
+                )    
+            })}
+          </div>
+          )
+      })}</div>
       }
 
     </div>
