@@ -12,7 +12,7 @@ import { ToastProvider } from 'react-toast-notifications'
 
 function App() {
     return (
-      <ToastProvider>
+      <ToastProvider placement={'bottom-right'} >
         <Router>
           <NavBar />
           <Switch>

@@ -61,11 +61,11 @@ function MyDropzone() {
                 console.log(res.data.FaceDetails)
                 setImage(false)
                 setScan(res.data.FaceDetails)
-                addToast('Saved To Gallery', { appearance: 'success' })
+                addToast('Saved To Gallery', { appearance: 'success', autoDismiss: true })
                 setLoading(false)
               })
               .catch(err => {
-                addToast(err, { appearance: 'error' })
+                addToast(err, { appearance: 'error', autoDismiss: true })
                 console.log(err)
               });
             })
