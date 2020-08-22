@@ -8,6 +8,7 @@ function Gallery() {
         <Typography variant="h4" gutterBottom>
           Gallery
         </Typography>
+        <p>Select an image by select the top left tick to analyse it's facial detection response</p>
         <ImageGridList />
       </div>
     )

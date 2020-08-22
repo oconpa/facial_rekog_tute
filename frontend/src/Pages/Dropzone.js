@@ -6,6 +6,7 @@ import SimpleAccordion from '../Components/Acordion'
 import { useToasts } from 'react-toast-notifications'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
+import short from 'short-uuid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,13 +24,15 @@ function MyDropzone() {
   const [scan, setScan] = useState([])
   const { addToast } = useToasts()
   const [loading, setLoading] = useState(false)
+  const [uuid, setUuid] = useState(false)
 
   const onDrop = (event) => {
+    setUuid(short.generate())
     console.log(event[0])
     setPictures(event)
     setImage(true)
     if (pictures.length > 0) {
-      console.log(pictures[0].name)
+      console.log(uuid)
     }
   }
 
@@ -37,7 +40,7 @@ function MyDropzone() {
     setLoading(true)
     axios(
       "https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/upload?fileName=" +
-            pictures[0].name
+            uuid
     ).then(response => {
         // Getting the url from response
         console.log(response)
@@ -55,7 +58,7 @@ function MyDropzone() {
               axios({
                 method: "POST",
                 url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/detect',
-                data: pictures[0].name,
+                data: uuid,
               })
               .then(res => {
                 console.log(res.data.FaceDetails)

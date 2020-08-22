@@ -16,14 +16,18 @@ const useStyles = makeStyles((theme) => ({
   },
   text: {
       fontSize: '12px'
+  },
+  nope: {
+    padding: 20
   }
 }));
 
 export default function SimpleAccordion(props) {
-    console.log(props.data)
+  console.log(props.data)
   const classes = useStyles();
 
   return (
+      props.data ?
     <div className={classes.root}>
      {props.data.map((element, index) => {
          return (
@@ -84,5 +88,7 @@ export default function SimpleAccordion(props) {
          )
      })}
     </div>
+    :
+    <div className={classes.nope}>No facial detections in the selected image</div>
   );
 }
