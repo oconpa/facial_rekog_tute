@@ -6,12 +6,17 @@
 
 > Machine Learning/Facial Detection
 
+
 ***ML APP DEMO***
+
 
 ![Farmers Market Finder Demo](img/hHv0y1ayU9.gif)
 
 ---
 
+<br />
+<br />
+<br />
 ## Table of Contents
 
 - [Setting up your Development Environment](#setting-up-your-development-environment)
