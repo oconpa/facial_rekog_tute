@@ -4,16 +4,11 @@
 
 > If you’ve built an application using AWS in the past or understand key cloud concepts, this workshop is suited for you. You will use AWS Rekognition to build an online gallery of ML detections, and use AWS services to scan, detect and draw data science inferences from the scans.
 
-> Machine Learning/Facial Detection
-
 
 ***ML APP DEMO***
 
 
-![Farmers Market Finder Demo](img/hHv0y1ayU9.gif)
-
----
-<br />
+![App Demo](img/hHv0y1ayU9.gif)
 
 ## Table of Contents
 
@@ -23,13 +18,11 @@
 <br />
 
 ---
-<br />
 
 ## Setting up your Development Environment
 <br />
 
 ### Provisioning your Cloud 9 IDE
-<br />
 
 1. Goto your AWS console via this link: https://aws.amazon.com/
 
@@ -46,6 +39,8 @@
    Click 'Create Environment'.
 
 ### Setting up your Cloud 9 w/ React application
+
+From the cloud9 service in aws, there should now be a c9 provisioned. Clicking on the **Open IDE** button should then open your c9; might take a bit if you haven't used it in a while.
 <br />
 
 1. Clone the current repository to your Cloud9 IDE.
@@ -82,13 +77,17 @@
 
 ---
 
-## Step 1: Setup and Expose the Backend
-
-1. Provision an s3 to store our images and ml results.
+## Step 1: Provision both an s3 and lambda resource
 
 Create a new bucket with whatever name you desire. We will assume throughout this tutorial that you name your bucket -> facial-detection-<Your Full Name>
+  
+![Create S3](img/S3Create.png)
 
-2. Create a lambda named facial-rekog.
+And then provision a lambda.
+
+![Lambda GIF](http://g.recordit.co/uT2DQyhTlb.gif)
+
+## Step 2: Expose Upload Route
 
 Next we will setup our lambda with the correct imports and variables to be used later. Copy the following code and edit the bucket name to match the bucket you created above.
 
@@ -103,9 +102,7 @@ bucket_name = "facial-detection-<Your Full Name>"
 expiration = 120
 ```
 
-3. Exposing upload.
-
-Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your handler.
+Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your lambda.
 
 ```python
 def handler(event, context):
@@ -132,15 +129,17 @@ def handler(event, context):
         }
 ```
 
-3a. Exposng the route via API Gateway.
+#### Exposing the route via API Gateway
 
 With relevant upload route now added to your lambda it's time to expose this the route on API Gateway. To do this we need to:
 - Create a new public REST API from the API service.
 
-- Once create let's add our first method to our first resource. Create a resource named upload, and attach a GET method to it.
+- Create a resource named upload, and attach a GET method to it.
 
-- Once attached we now need to point our API to the lambda and finally deploy it.
-
-- After deploying the API it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
+- Point your API to the lambda and then deploy.
 
 ---
+
+## Step 3: Expose Upload Route
+
+After deploying the API it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
