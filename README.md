@@ -1,12 +1,12 @@
 <img src='/img/Amazon_event.png' width="800" height="400" />
 
-# Facial Rekognition Tutorial
+# Facial Rekognition Workshop
 
-> Subtitle or Short Description Goes Here
+> If you’ve built an application using AWS in the past or understand key cloud concepts, this workshop is suited for you. You will use AWS Rekognition to build an online gallery of ML detections, and use AWS services to scan, detect and draw data science inferences from the scans.
 
-> ideally one sentence
+> Machine Learning/Facial Detection
 
-> include terms/tags that can be searched
+> #AWS #ML AI Cloud Plug'n'Play
 
 1. Edit react frontend
 2. Make s3 bucket and push react build to it
