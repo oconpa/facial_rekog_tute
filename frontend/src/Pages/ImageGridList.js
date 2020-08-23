@@ -30,7 +30,7 @@ function ImageGridList() {
         // const IMAGES = []
         axios({
             method: "GET",
-            url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/listgallery',
+            url: 'REPLACE ME',
         }).then(x => {
             setIMAGES(x.data)
         })
@@ -39,7 +39,7 @@ function ImageGridList() {
     const deleteImage = () => {
         axios({
             method: "DELETE",
-            url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/delete',
+            url: 'REPLACE ME',
             data: { file: IMAGES[currentImage].src }
         }).then(x => {
             window.location.reload(false);
@@ -56,7 +56,7 @@ function ImageGridList() {
         setLoading(true)
         axios({
             method: "POST",
-            url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/detect',
+            url: 'REPLACE ME',
             data: IMAGES[event].src.split('/')[3].split('?')[0],
         })
         .then(res => {

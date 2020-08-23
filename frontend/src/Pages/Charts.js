@@ -9,7 +9,7 @@ function Chart() {
     useEffect(() => {
         axios({
             method: "POST",
-            url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/charts',
+            url: 'REPLACE ME',
             data: 'age',
         }).then(res => {
             setAge({
@@ -40,7 +40,7 @@ function Chart() {
 
         axios({
             method: "POST",
-            url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/charts',
+            url: 'REPLACE ME',
             data: 'smile',
         }).then(res => {
             setSmile({

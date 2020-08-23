@@ -39,7 +39,7 @@ function MyDropzone() {
   const uploadFile = () => {
     setLoading(true)
     axios(
-      "https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/upload?fileName=" +
+      "REPLACE ME" + "?fileName=" +
             uuid
     ).then(response => {
         // Getting the url from response
@@ -57,7 +57,7 @@ function MyDropzone() {
             .then(res => {
               axios({
                 method: "POST",
-                url: 'https://8qohygpr1k.execute-api.ap-southeast-2.amazonaws.com/dev/detect',
+                url: 'REPLACE ME',
                 data: uuid,
               })
               .then(res => {
@@ -72,13 +72,6 @@ function MyDropzone() {
                 console.log(err)
               });
             })
-            .catch(err => {
-                // this.setState({
-                //     error: "Error Occured while uploading the file",
-                //     uploadSuccess: undefined
-                // });
-                console.log(err)
-            });
     });
 }
 
