@@ -14,7 +14,11 @@
 
 - [Setting up your Development Environment](#setting-up-your-development-environment)
   - [Provisioning your Cloud 9 IDE](#provisioning-your-cloud-9-ide)
-  - [Setting up your Cloud 9 w/ React application](#setting-up-your-cloud-9-w/-react-application)
+  - [Setting up your Cloud 9 with React application](#setting-up-your-cloud-9-with-react-application)
+- [Step 1: Provision both an s3 and lambda resource](#step-1:-provision-both-an-s3-and-lambda-resource)
+- [Step 2: Expose Upload Route](#step-2:-expose-upload-route)
+  - [Exposing the route via API Gateway](#exposing-the-route-via-api-gateway)
+- [Step 3: Connecting the React Frontend to the Upload Route Backend](#step-3:-connecting-the-react-frontend-to-the-upload-route-backend)
 <br />
 
 ---
