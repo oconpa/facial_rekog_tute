@@ -1,3 +1,13 @@
+<img src='/img/Amazon_event.png' width="800" height="400" />
+
+# Facial Rekognition Tutorial
+
+> Subtitle or Short Description Goes Here
+
+> ideally one sentence
+
+> include terms/tags that can be searched
+
 1. Edit react frontend
 2. Make s3 bucket and push react build to it
 3. Create a lambda from cli and attach it to API Gateway to expose
@@ -12,16 +22,6 @@ aws lambda create-function --function-name facial-rekog --runtime python3.8 --ro
 8. Create a dynamo record set that is trigger by saving content to the s3 gallery.
 9. Build on dynamo record set to do some data science.
 10. Possible athena pull from s3
-
-<img src='/img/Amazon_event.png' width="800" height="400" />
-
-# Facial Rekognition Tutorial
-
-> Subtitle or Short Description Goes Here
-
-> ideally one sentence
-
-> include terms/tags that can be searched
 
 **Badges will go here**
 
