@@ -8,10 +8,11 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import { ToastProvider } from 'react-toast-notifications'
 
 function App() {
     return (
-      <div>
+      <ToastProvider placement={'bottom-right'} >
         <Router>
           <NavBar />
           <Switch>
@@ -26,7 +27,7 @@ function App() {
             </Route>
           </Switch>
         </Router>
-      </div>
+      </ToastProvider>
     )
 }
 
