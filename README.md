@@ -10,52 +10,6 @@
 
 ![Farmers Market Finder Demo](img/hHv0y1ayU9.gif)
 
-
-![Demo GIF](http://g.recordit.co/hHv0y1ayU9.gif)
-![Record GIF](http://g.recordit.co/iLN6A0vSD8.gif)
-
-
-
-
-
-
-1. Edit react frontend
-2. Make s3 bucket and push react build to it
-3. Create a lambda from cli and attach it to API Gateway to expose
-
-aws iam create-role --role-name facial-rekognise --cli-input-json skeleton.json
-aws lambda create-function --function-name facial-rekog --runtime python3.8 --role arn:aws:iam::080284742429:role/facial_rekog --handler lambda.handler --zip-file fileb://lambda.zip
-
-4. Add code to lambda with rekognition
-5. App complete
-6. Attached SNS to message and email when people use your site
-7. Create a gallery which loads an s3 library of previously uploaded image with rekognition data
-8. Create a dynamo record set that is trigger by saving content to the s3 gallery.
-9. Build on dynamo record set to do some data science.
-10. Possible athena pull from s3
-
-- Most people will glance at your `README`, *maybe* star it, and leave
-- Ergo, people should understand instantly what your project is about based on your repo
-
-> Tips
-
-- HAVE WHITE SPACE
-- MAKE IT PRETTY
-- GIFS ARE REALLY COOL
-
-> GIF Tools
-
-- Use <a href="http://recordit.co/" target="_blank">**Recordit**</a> to create quicks screencasts of your desktop and export them as `GIF`s.
-- For terminal sessions, there's <a href="https://github.com/chjj/ttystudio" target="_blank">**ttystudio**</a> which also supports exporting `GIF`s.
-
-**Recordit**
-
-![Recordit GIF](http://g.recordit.co/iLN6A0vSD8.gif)
-
-**ttystudio**
-
-![ttystudio GIF](https://raw.githubusercontent.com/chjj/ttystudio/master/img/example.gif)
-
 ---
 
 ## Table of Contents (Optional)
@@ -73,6 +27,46 @@ aws lambda create-function --function-name facial-rekog --runtime python3.8 --ro
 
 ---
 
+## Setup
+
+All the `code` required to get started
+
+### Provisioning your Cloud 9 IDE
+
+1. Goto your AWS console via this link: https://aws.amazon.com/
+
+2. Search up 'Cloud 9' in the search bar, and click on the first option.
+
+3. Click 'Create Environment'
+
+4. Set the **name** of your environment to be 'AmplifyWorkshop'.\
+   Click 'Next Step'.\
+   Under 'Instance Type' select 'Other instance type', and search for 't3.medium' in the dropdown search.
+
+5. Leave everything else as default.\
+   Click 'Next Step'.\
+   Click 'Create Environment'.
+
+
+1. Edit react frontend
+2. Make s3 bucket and push react build to it
+3. Create a lambda from cli and attach it to API Gateway to expose
+
+aws iam create-role --role-name facial-rekognise --cli-input-json skeleton.json
+aws lambda create-function --function-name facial-rekog --runtime python3.8 --role arn:aws:iam::080284742429:role/facial_rekog --handler lambda.handler --zip-file fileb://lambda.zip
+
+4. Add code to lambda with rekognition
+5. App complete
+6. Attached SNS to message and email when people use your site
+7. Create a gallery which loads an s3 library of previously uploaded image with rekognition data
+8. Create a dynamo record set that is trigger by saving content to the s3 gallery.
+9. Build on dynamo record set to do some data science.
+10. Possible athena pull from s3
+
+**ttystudio**
+
+![ttystudio GIF](https://raw.githubusercontent.com/chjj/ttystudio/master/img/example.gif)
+
 ## Example (Optional)
 
 ```javascript
@@ -87,11 +81,6 @@ let generateProject = project => {
 ```
 
 ---
-
-## Installation
-
-- All the `code` required to get started
-- Images of what it should look like
 
 ### Clone
 
