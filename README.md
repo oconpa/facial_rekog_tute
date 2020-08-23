@@ -16,20 +16,12 @@
 
 - [Setting up your Development Environment](#setting-up-your-development-environment)
   - [Provisioning your Cloud 9 IDE](#provisioning-your-cloud-9-ide)
-  - [Setting up your Cloud 9 w/ React application](#Setting-up-your-Cloud9-React-application)
-- [Features](#features)
-- [Contributing](#contributing)
-- [Team](#team)
-- [FAQ](#faq)
-- [Support](#support)
-- [License](#license)
+  - [Setting up your Cloud 9 w/ React application](#setting-up-your-cloud-9-w/-react-application)
 
 
 ---
 
 ## Setting up your Development Environment
-
-All the `code` required to get started
 
 ### Provisioning your Cloud 9 IDE
 
@@ -49,93 +41,39 @@ All the `code` required to get started
 
 ### Setting up your Cloud 9 w/ React application
 
-1. Clone the current repository to your Cloud9 IDE.8
+1. Clone the current repository to your Cloud9 IDE.
    
-   ```bash
-   git clone -b frontendOnly https://github.com/josephtey/AWSAmplifyWorkshop.git
-   ```
-   
-2. Move into the cloned directory, and install all required packages. 
-
-   ```bash
-   cd AWSAmplifyWorkshop
-   npm install
-   ```
-   
-3. Install the Amplify CLI and initialise the project (as an Amplify app)
-   ```bash
-   npm install -g @aws-amplify/cli
+   ```shell
+   git clone https://github.com/oconpa/facial_rekog_tute.git
    ```
 
-4. Initialise the project as an Amplify application
-
-   ```bash
-   amplify init
-   
-   ? Enter a name for the project: AWSAmplifyWorkshop
-   ? Enter a name for the environment: dev
-   ? Choose your default editor: None
-   ? Choose the type of app that youre building: javascript
-   
-   Please tell us about your project
-   ? What javascript framework are you using: react
-   ? Source Directory Path: src
-   ? Distribution Directory Path: build
-   ? Build Command:  npm run-script build
-   ? Start Command: npm run-script start
-   
-   AWS access credentials can not be found.
-   ? Setup new user (Y/n) Yes
-   
-   Press Enter (you dont need to click the link for this one)
-   
-   Specify the AWS Region
-   ? region:  ap-southeast-2
-   Specify the username of the new IAM user:
-   ? user name:  amplify-workshop
-   Complete the user creation using the AWS console
-   
-   Click on the link that is provided
-   ```
-   
-   You will get a link to configure your Identity Access Management user.\
-   Click on it, keep clicking 'Next' and leave everything default until you reach 'Create User'.\
-   Click 'Download .csv' to save your User Credentials.
-   
-   Go back to your Cloud9.\
-   Your `accessKeyId` and `secretAccessKey` will be in the CSV file that you just downloaded.
-   
-   ```bash
-   ? accessKeyId: ********************
-   ? secretAccessKey:  ****************************************
-   ? region:  ap-southeast-2
-   ```
-   
-
-5. Connect your React web app to Amplify
-
-   Open the file `src/index.js`, and add the following code **after the import statements**:
-   
-   ```javascript
-   import config from './aws-exports'
-   import Amplify from 'aws-amplify'
-   Amplify.configure(config)
+2. Install yarn
+   ```shell
+   npm install -g yarn
    ```
 
-6. Run the React application
-   ```bash
-   npm start
+3. Move into the cloned directory, and install all required packages. 
+
+   ```shell
+   cd frontend
+   yarn
+   ```
+
+5. Run the React application
+   ```shell
+   yarn start
    ```
    
-7. Preview your Web Application
+6. Preview your Web Application
    
    After the app has compiled successfully, click 'Tools' in the toolbar up top, click 'Preview' and finally click 'Preview Running Application'. 
    Open the preview in another tab by clicking the arrow / box button on the right of the search bar. 
+   
+![ttystudio GIF](https://raw.githubusercontent.com/chjj/ttystudio/master/img/example.gif)
 
-**You should see a basic Shopping List app in your browser! However, there is currently no functionality. Let's use AWS to fix this!**
+**You should see a basic web app in your browser! However, there is currently no functionality. Let's use AWS to fix this!**
 
-
-
+---
 
 1. Edit react frontend
 2. Make s3 bucket and push react build to it
@@ -146,54 +84,7 @@ aws lambda create-function --function-name facial-rekog --runtime python3.8 --ro
 
 4. Add code to lambda with rekognition
 5. App complete
-6. Attached SNS to message and email when people use your site
 7. Create a gallery which loads an s3 library of previously uploaded image with rekognition data
-8. Create a dynamo record set that is trigger by saving content to the s3 gallery.
-9. Build on dynamo record set to do some data science.
-10. Possible athena pull from s3
-
-**ttystudio**
-
-![ttystudio GIF](https://raw.githubusercontent.com/chjj/ttystudio/master/img/example.gif)
-
-## Example (Optional)
-
-```javascript
-// code away!
-
-let generateProject = project => {
-  let code = [];
-  for (let js = 0; js < project.length; js++) {
-    code.push(js);
-  }
-};
-```
-
----
-
-### Clone
-
-- Clone this repo to your local machine using `https://github.com/fvcproductions/SOMEREPO`
-
-### Setup
-
-- If you want more syntax highlighting, format your code like this:
-
-> update and install this package first
-
-```shell
-$ brew update
-$ brew install fvcproductions
-```
-
-> now install npm and bower packages
-
-```shell
-$ npm install
-$ bower install
-```
-
-- For all the possible languages that support syntax highlithing on GitHub (which is basically all of them), refer <a href="https://github.com/github/linguist/blob/master/lib/linguist/languages.yml" target="_blank">here</a>.
 
 ---
 
