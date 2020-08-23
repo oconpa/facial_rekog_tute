@@ -75,7 +75,7 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
    After the app has compiled successfully, click 'Tools' in the toolbar up top, click 'Preview' and finally click 'Preview Running Application'. 
    Open the preview in another tab by clicking the arrow / box button on the right of the search bar. 
    
-![ttystudio GIF](https://raw.githubusercontent.com/chjj/ttystudio/master/img/example.gif)
+![yarn GIF](http://recordit.co/atFTD5P5RY.gif)
 
 **You should see a basic web app in your browser! However, there is currently no functionality. Let's use AWS to fix this!**
 
