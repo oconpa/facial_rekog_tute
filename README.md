@@ -21,6 +21,12 @@ http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
 - [Step 2 Expose Upload Route](#step-2-expose-upload-route)
   - [Exposing the route via API Gateway](#exposing-the-route-via-api-gateway)
 - [Step 3 Connecting the React Frontend to the Upload Route Backend](#step-3-connecting-the-react-frontend-to-the-upload-route-backend)
+- [Challenge Time](#challenge-time)
+  - [Challenge 1 /detect](#challenge-1-/detect)
+  - [Challenge 2 /delete](#challenge-2-/delete)
+  - [Challenge 3 /listgallery](#challenge-3-/listgallery)
+  - [Challenge 4 /charts](#challenge-4-/charts)
+
 <br />
 
 ---
@@ -224,7 +230,7 @@ Good luck, remember the faster you complete the challeneges and show to your tra
         }
 ```
 
-#### Challenge 3 /delete
+#### Challenge 3 /listgallery
 
 ```python
     elif (event['path'] == '/listgallery'):
