@@ -8,7 +8,8 @@
 
 ***ML APP DEMO***
 
-![Recordit GIF](http://g.recordit.co/hHv0y1ayU9.gif)
+![Demo GIF](http://g.recordit.co/hHv0y1ayU9.gif)
+![Record GIF](http://g.recordit.co/iLN6A0vSD8.gif)
 
 
 
