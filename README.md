@@ -22,10 +22,10 @@ http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
   - [Exposing the route via API Gateway](#exposing-the-route-via-api-gateway)
 - [Step 3 Connecting the React Frontend to the Upload Route Backend](#step-3-connecting-the-react-frontend-to-the-upload-route-backend)
 - [Challenge Time](#challenge-time)
-  - [Challenge 1 /detect](#challenge-1-/detect)
-  - [Challenge 2 /delete](#challenge-2-/delete)
-  - [Challenge 3 /listgallery](#challenge-3-/listgallery)
-  - [Challenge 4 /charts](#challenge-4-/charts)
+  - [Challenge 1 detect](#challenge-1-detect)
+  - [Challenge 2 delete](#challenge-2-delete)
+  - [Challenge 3 listgallery](#challenge-3-listgallery)
+  - [Challenge 4 charts](#challenge-4-charts)
 
 <br />
 
@@ -176,7 +176,7 @@ For reference as you complete the challeneges your app should run similar to htt
 
 Good luck, remember the faster you complete the challeneges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
 
-#### Challenge 1 /detect
+#### Challenge 1 detect
 
 ```python
     elif (event['path'] == '/detect'):
@@ -207,7 +207,7 @@ Good luck, remember the faster you complete the challeneges and show to your tra
         }
 ```
 
-#### Challenge 2 /delete
+#### Challenge 2 delete
 
 ```python
     elif (event['path'] == '/delete'):
@@ -230,7 +230,7 @@ Good luck, remember the faster you complete the challeneges and show to your tra
         }
 ```
 
-#### Challenge 3 /listgallery
+#### Challenge 3 listgallery
 
 ```python
     elif (event['path'] == '/listgallery'):
@@ -265,7 +265,7 @@ Good luck, remember the faster you complete the challeneges and show to your tra
         }
 ```
 
-#### Challenge 4 /charts
+#### Challenge 4 charts
 
 ```python
     elif (event['path'] == '/charts'):
