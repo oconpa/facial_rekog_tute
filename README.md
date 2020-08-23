@@ -17,6 +17,10 @@ aws lambda create-function --function-name facial-rekog --runtime python3.8 --ro
 
 <!-- [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com) -->
 ![Test Logo](/img/Melb_club_AWS_event1.png | width=10)
+![This Logo](/img/Melb_club_AWS_event1.png =250x250)
+
+
+<img src='/img/Melb_club_AWS_event1.png' width="200" height="400" />
 
 ***INSERT GRAPHIC HERE (include hyperlink in image)***
 
