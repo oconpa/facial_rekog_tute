@@ -6,6 +6,15 @@
 
 > Machine Learning/Facial Detection
 
+***ML APP DEMO***
+
+![Recordit GIF](http://g.recordit.co/hHv0y1ayU9.gif)
+
+
+
+
+
+
 1. Edit react frontend
 2. Make s3 bucket and push react build to it
 3. Create a lambda from cli and attach it to API Gateway to expose
@@ -20,12 +29,6 @@ aws lambda create-function --function-name facial-rekog --runtime python3.8 --ro
 8. Create a dynamo record set that is trigger by saving content to the s3 gallery.
 9. Build on dynamo record set to do some data science.
 10. Possible athena pull from s3
-
-- For more on these wonderful ~~badgers~~ badges, refer to <a href="http://badges.github.io/badgerbadgerbadger/" target="_blank">`badgerbadgerbadger`</a>.
-
-***INSERT ANOTHER GRAPHIC HERE***
-
-[![INSERT YOUR GRAPHIC HERE](http://i.imgur.com/dt8AUb6.png)]()
 
 - Most people will glance at your `README`, *maybe* star it, and leave
 - Ergo, people should understand instantly what your project is about based on your repo
