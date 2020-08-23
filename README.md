@@ -136,7 +136,13 @@ With relevant upload route now added to your lambda it's time to expose this the
 
 - Create a resource named upload, and attach a GET method to it.
 
-- Point your API to the lambda and then deploy.
+![API GIF](http://g.recordit.co/y92ahdCtng.gif)
+
+- Point your API to the lambda.
+
+- Deploy and copy the upload link.
+
+
 
 ---
 
