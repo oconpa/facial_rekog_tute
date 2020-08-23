@@ -83,13 +83,13 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
 
 ## Step 1 Provision both an s3 and lambda resource
 
-Create a new bucket with whatever name you desire. We will assume throughout this tutorial that you name your bucket -> facial-detection-<Your Full Name>
+Create a new bucket with whatever name you desire. We will assume that throughout this tutorial you named your bucket -> facial-detection-'Your Full Name'
   
 ![Create S3](img/S3Create.png)
 
 And then provision a lambda.
 
-![Lambda GIF](http://g.recordit.co/uT2DQyhTlb.gif)
+![Lambda GIF](img/lambdaCreate.gif)
 
 ## Step 2 Expose Upload Route
 
@@ -140,13 +140,13 @@ With relevant upload route now added to your lambda it's time to expose this the
 
 - Create a resource named upload, and attach a GET method to it.
 
-![API GIF](http://g.recordit.co/y92ahdCtng.gif)
+![API GIF](img/APICreate.gif)
 
 - Point your API to the lambda.
 
 - Deploy and copy the upload link.
 
-![API2 GIF](http://recordit.co/dqgY9XbXUp.gif)
+![API2 GIF](img/deployAPI.gif)
 
 ---
 
@@ -154,8 +154,8 @@ With relevant upload route now added to your lambda it's time to expose this the
 
 After deploying the API and copying the link, it can now be consumed and used in the frontend.
 
-![API3 GIF](http://g.recordit.co/WhE8K8ESaj.gif)
+![API3 GIF](img/ReactLink.gif)
 
 it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
 
-![API4 GIF](http://recordit.co/rZWsgNgoVD.gif)
+![API4 GIF](img/ReactStart.gif)
