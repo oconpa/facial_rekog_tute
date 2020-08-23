@@ -42,7 +42,7 @@
    Click 'Next Step'.\
    Click 'Create Environment'.
 
-### Setting up your Cloud 9 w/ React application
+### Setting up your Cloud 9 with React application
 
 From the cloud9 service in aws, there should now be a c9 provisioned. Clicking on the **Open IDE** button should then open your c9; might take a bit if you haven't used it in a while.
 <br />
