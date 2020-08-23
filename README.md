@@ -142,10 +142,16 @@ With relevant upload route now added to your lambda it's time to expose this the
 
 - Deploy and copy the upload link.
 
-
+![API2 GIF](http://recordit.co/dqgY9XbXUp.gif)
 
 ---
 
-## Step 3: Expose Upload Route
+## Step 3: Connecting the React Frontend to the Upload Route Backend
 
-After deploying the API it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
+After deploying the API and copying the link, it can now be consumed and used in the frontend.
+
+![API3 GIF](http://g.recordit.co/WhE8K8ESaj.gif)
+
+it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
+
+![API4 GIF](http://recordit.co/rZWsgNgoVD.gif)
