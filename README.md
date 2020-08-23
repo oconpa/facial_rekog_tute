@@ -82,6 +82,68 @@
 
 ---
 
+## Step 1: Setup and Expose the Backend
+
+1. Provision an s3 to store our images and ml results.
+
+Create a new bucket with whatever name you desire. We will assume throughout this tutorial that you name your bucket -> facial-detection-<Your Full Name>
+
+2. Create a lambda named facial-rekog.
+
+Next we will setup our lambda with the correct imports and variables to be used later. Copy the following code and edit the bucket name to match the bucket you created above.
+
+'''python
+import boto3
+import json
+from botocore.exceptions import ClientError
+
+client = boto3.client('rekognition')
+s3 = boto3.client('s3')
+bucket_name = "facial-detection-<Your Full Name>"
+expiration = 120
+'''
+
+3. Exposing upload.
+
+Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your handler.
+
+'''python
+def handler(event, context):
+    if (event['path'] == '/upload'):
+        try:
+            response = s3.generate_presigned_url(
+                        'put_object',
+                        Params={
+                            'Bucket': bucket_name,
+                            'Key': event['queryStringParameters']['fileName'],
+                            'ContentType': 'multipart/form-data'
+                        },
+                        ExpiresIn=expiration)
+        except ClientError as e:
+            logging.error(e)
+            return None
+
+        return {
+            'statusCode': 200,
+            'headers': {
+                "access-control-allow-origin": "*"
+            },
+            'body': json.dumps(response)
+        }
+'''
+
+3a. Exposng the route via API Gateway.
+
+With relevant upload route now added to your lambda it's time to expose this the route on API Gateway. To do this we need to:
+- Create a new public REST API from the API service.
+
+- Once create let's add our first method to our first resource. Create a resource named upload, and attach a GET method to it.
+
+- Once attached we now need to point our API to the lambda and finally deploy it.
+
+- After deploying the API it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
+
+
 1. Edit react frontend
 2. Make s3 bucket and push react build to it
 3. Create a lambda from cli and attach it to API Gateway to expose
@@ -94,82 +156,3 @@ aws lambda create-function --function-name facial-rekog --runtime python3.8 --ro
 7. Create a gallery which loads an s3 library of previously uploaded image with rekognition data
 
 ---
-
-## Features
-## Usage (Optional)
-## Documentation (Optional)
-## Tests (Optional)
-
-- Going into more detail on code and technologies used
-- I utilized this nifty <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown Cheatsheet</a> for this sample `README`.
-
----
-
-## Contributing
-
-> To get started...
-
-### Step 1
-
-- **Option 1**
-    - 🍴 Fork this repo!
-
-- **Option 2**
-    - 👯 Clone this repo to your local machine using `https://github.com/joanaz/HireDot2.git`
-
-### Step 2
-
-- **HACK AWAY!** 🔨🔨🔨
-
-### Step 3
-
-- 🔃 Create a new pull request using <a href="https://github.com/joanaz/HireDot2/compare/" target="_blank">`https://github.com/joanaz/HireDot2/compare/`</a>.
-
----
-
-## Team
-
-> Or Contributors/People
-
-| <a href="http://fvcproductions.com" target="_blank">**FVCproductions**</a> | <a href="http://fvcproductions.com" target="_blank">**FVCproductions**</a> | <a href="http://fvcproductions.com" target="_blank">**FVCproductions**</a> |
-| :---: |:---:| :---:|
-| [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com)    | [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com) | [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com)  |
-| <a href="http://github.com/fvcproductions" target="_blank">`github.com/fvcproductions`</a> | <a href="http://github.com/fvcproductions" target="_blank">`github.com/fvcproductions`</a> | <a href="http://github.com/fvcproductions" target="_blank">`github.com/fvcproductions`</a> |
-
-- You can just grab their GitHub profile image URL
-- You should probably resize their picture using `?s=200` at the end of the image URL.
-
----
-
-## FAQ
-
-- **How do I do *specifically* so and so?**
-    - No problem! Just do this.
-
----
-
-## Support
-
-Reach out to me at one of the following places!
-
-- Website at <a href="http://fvcproductions.com" target="_blank">`fvcproductions.com`</a>
-- Twitter at <a href="http://twitter.com/fvcproductions" target="_blank">`@fvcproductions`</a>
-- Insert more social links here.
-
----
-
-## Donations (Optional)
-
-- You could include a <a href="https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.png" target="_blank">Gratipay</a> link as well.
-
-[![Support via Gratipay](https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.png)](https://gratipay.com/fvcproductions/)
-
-
----
-
-## License
-
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
-- **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2015 © <a href="http://fvcproductions.com" target="_blank">FVCproductions</a>.
