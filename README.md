@@ -15,10 +15,10 @@
 - [Setting up your Development Environment](#setting-up-your-development-environment)
   - [Provisioning your Cloud 9 IDE](#provisioning-your-cloud-9-ide)
   - [Setting up your Cloud 9 with React application](#setting-up-your-cloud-9-with-react-application)
-- [Step 1: Provision both an s3 and lambda resource](#step-1:-provision-both-an-s3-and-lambda-resource)
-- [Step 2: Expose Upload Route](#step-2:-expose-upload-route)
+- [Step 1 Provision both an s3 and lambda resource](#step-1-provision-both-an-s3-and-lambda-resource)
+- [Step 2 Expose Upload Route](#step-2-expose-upload-route)
   - [Exposing the route via API Gateway](#exposing-the-route-via-api-gateway)
-- [Step 3: Connecting the React Frontend to the Upload Route Backend](#step-3:-connecting-the-react-frontend-to-the-upload-route-backend)
+- [Step 3 Connecting the React Frontend to the Upload Route Backend](#step-3-connecting-the-react-frontend-to-the-upload-route-backend)
 <br />
 
 ---
@@ -81,7 +81,7 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
 
 ---
 
-## Step 1: Provision both an s3 and lambda resource
+## Step 1 Provision both an s3 and lambda resource
 
 Create a new bucket with whatever name you desire. We will assume throughout this tutorial that you name your bucket -> facial-detection-<Your Full Name>
   
@@ -91,7 +91,7 @@ And then provision a lambda.
 
 ![Lambda GIF](http://g.recordit.co/uT2DQyhTlb.gif)
 
-## Step 2: Expose Upload Route
+## Step 2 Expose Upload Route
 
 Next we will setup our lambda with the correct imports and variables to be used later. Copy the following code and edit the bucket name to match the bucket you created above.
 
@@ -150,7 +150,7 @@ With relevant upload route now added to your lambda it's time to expose this the
 
 ---
 
-## Step 3: Connecting the React Frontend to the Upload Route Backend
+## Step 3 Connecting the React Frontend to the Upload Route Backend
 
 After deploying the API and copying the link, it can now be consumed and used in the frontend.
 
