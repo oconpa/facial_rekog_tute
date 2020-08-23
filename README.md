@@ -13,22 +13,23 @@
 ![Farmers Market Finder Demo](img/hHv0y1ayU9.gif)
 
 ---
+<br />
 
-<br />
-<br />
-<br />
 ## Table of Contents
 
 - [Setting up your Development Environment](#setting-up-your-development-environment)
   - [Provisioning your Cloud 9 IDE](#provisioning-your-cloud-9-ide)
   - [Setting up your Cloud 9 w/ React application](#setting-up-your-cloud-9-w/-react-application)
-
+<br />
 
 ---
+<br />
 
 ## Setting up your Development Environment
+<br />
 
 ### Provisioning your Cloud 9 IDE
+<br />
 
 1. Goto your AWS console via this link: https://aws.amazon.com/
 
@@ -45,6 +46,7 @@
    Click 'Create Environment'.
 
 ### Setting up your Cloud 9 w/ React application
+<br />
 
 1. Clone the current repository to your Cloud9 IDE.
    
