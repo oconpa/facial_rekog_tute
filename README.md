@@ -10,6 +10,8 @@
 
 ![App Demo](img/hHv0y1ayU9.gif)
 
+http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
+
 ## Table of Contents
 
 - [Setting up your Development Environment](#setting-up-your-development-environment)
@@ -159,3 +161,175 @@ After deploying the API and copying the link, it can now be consumed and used in
 it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
 
 ![API4 GIF](img/ReactStart.gif)
+
+## Challenge Time
+
+Congradulation on getting this far in the workshop. As promised this section is your opportunity to reap on some AWS credits. In this workshop we have 4 challenges for you to try out. Each challenge realtes to one functionality in the ML React App, and should ahev an attach gif explaining on how this functionality works. Your job is to add the code for each challenege to the lambda you provisioned above, open the route just like you did for the upload route on the API you created, and find where that route is added in the react app. 
+
+For reference as you complete the challeneges your app should run similar to http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
+
+Good luck, remember the faster you complete the challeneges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
+
+#### Challenge 1 /detect
+
+```python
+    elif (event['path'] == '/detect'):
+        response = client.detect_faces(
+            Image={
+                'S3Object': {
+                    'Bucket': bucket_name,
+                    'Name': event['body'],
+                }
+            },
+            Attributes=['ALL']
+        )
+        
+        s3.put_object(
+            Body=(bytes(json.dumps(response).encode('UTF-8'))),
+            Bucket=bucket_name,
+            Key=str(event['body'][:-4]) + '.json',
+        )
+
+        
+        print(response)
+        return {
+            'statusCode': 200,
+            'headers': {
+                "access-control-allow-origin": "*"
+            },
+            'body': json.dumps(response)
+        }
+```
+
+#### Challenge 2 /delete
+
+```python
+    elif (event['path'] == '/delete'):
+        data = json.loads(event['body'])
+        key = data['file'].split('/')[3].split('?')[0]
+        s3.delete_object(
+                Bucket=bucket_name,
+                Key=key
+            )
+        s3.delete_object(
+                Bucket=bucket_name,
+                Key=key[:-4] + '.json'
+            )
+        return {
+            'statusCode': 200,
+            'headers': {
+                "access-control-allow-origin": "*"
+            },
+            'body': json.dumps({'Message': 'Success'})
+        }
+```
+
+#### Challenge 3 /delete
+
+```python
+    elif (event['path'] == '/listgallery'):
+        response = s3.list_objects_v2(
+            Bucket=bucket_name
+            )
+
+        for i in range(len(response['Contents'])-1, -1, -1):
+            if 'LastModified' in response['Contents'][i]:
+                del response['Contents'][i]['LastModified']
+            if response['Contents'][i]['Key'][-5:] == '.json':
+                response['Contents'].pop(i)
+
+        alist = []
+        for j in response['Contents']:
+            link = s3.generate_presigned_url(
+                        'get_object',
+                        Params={
+                            'Bucket': bucket_name,
+                            'Key': j['Key'],
+                        },
+                        ExpiresIn=expiration)
+            alist.append({'src': link, 'thumbnail': link})
+        print(alist)
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                "access-control-allow-origin": "*"
+            },
+            'body': json.dumps(alist)
+        }
+```
+
+#### Challenge 4 /charts
+
+```python
+    elif (event['path'] == '/charts'):
+        if (event['body'] == 'age'):
+            response = s3.list_objects_v2(
+                Bucket=bucket_name
+            )
+            
+            alist = []
+            for item in response['Contents']:
+                if (item['Key'][-5:] == '.json'):
+                    resp = s3.get_object(
+                        Bucket=bucket_name,
+                        Key=item['Key']
+                    )
+                    alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+            
+            chart = [0, 0, 0, 0, 0, 0]
+            for i in alist:
+                if len(i['FaceDetails']) != 0:
+                    for j in i['FaceDetails']:
+                        age = (j['AgeRange']['Low'] + j['AgeRange']['High'])/2
+                        if age > 89:
+                            chart[5] += 1
+                        elif age > 69:
+                            chart[4] += 1
+                        elif age > 49:
+                            chart[3] += 1
+                        elif age > 39:
+                            chart[2] += 1
+                        elif age > 19:
+                            chart[1] += 1
+                        elif age >= 0:
+                            chart[0] += 1
+
+            return {
+                'statusCode': 200,
+                'headers': {
+                    "access-control-allow-origin": "*"
+                },
+                'body': json.dumps(chart)
+            }
+        elif (event['body'] == 'smile'):
+            response = s3.list_objects_v2(
+                Bucket=bucket_name
+            )
+            
+            alist = []
+            for item in response['Contents']:
+                if (item['Key'][-5:] == '.json'):
+                    resp = s3.get_object(
+                        Bucket=bucket_name,
+                        Key=item['Key']
+                    )
+                    alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+            
+            chart = [0, 0]
+            for i in alist:
+                if len(i['FaceDetails']) != 0:
+                    for j in i['FaceDetails']:
+                        if j['Smile']['Value']:
+                            chart[0] += 1
+                        else:
+                            chart[1] += 1
+
+            return {
+                'statusCode': 200,
+                'headers': {
+                    "access-control-allow-origin": "*"
+                },
+                'body': json.dumps(chart)
+            }
+```
