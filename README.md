@@ -178,6 +178,8 @@ Good luck, remember the faster you complete the challeneges and show to your tra
 
 #### Challenge 1 detect
 
+![Detect GIF](img/detect.gif)
+
 ```python
     elif (event['path'] == '/detect'):
         response = client.detect_faces(
@@ -209,6 +211,8 @@ Good luck, remember the faster you complete the challeneges and show to your tra
 
 #### Challenge 2 delete
 
+![Delete GIF](img/delete.gif)
+
 ```python
     elif (event['path'] == '/delete'):
         data = json.loads(event['body'])
@@ -231,6 +235,8 @@ Good luck, remember the faster you complete the challeneges and show to your tra
 ```
 
 #### Challenge 3 listgallery
+
+![list GIF](img/listgallery.gif)
 
 ```python
     elif (event['path'] == '/listgallery'):
@@ -266,6 +272,8 @@ Good luck, remember the faster you complete the challeneges and show to your tra
 ```
 
 #### Challenge 4 charts
+
+![charts GIF](img/charts.gif)
 
 ```python
     elif (event['path'] == '/charts'):
