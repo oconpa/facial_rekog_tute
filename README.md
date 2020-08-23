@@ -92,7 +92,7 @@ Create a new bucket with whatever name you desire. We will assume throughout thi
 
 Next we will setup our lambda with the correct imports and variables to be used later. Copy the following code and edit the bucket name to match the bucket you created above.
 
-'''python
+```python
 import boto3
 import json
 from botocore.exceptions import ClientError
@@ -101,13 +101,13 @@ client = boto3.client('rekognition')
 s3 = boto3.client('s3')
 bucket_name = "facial-detection-<Your Full Name>"
 expiration = 120
-'''
+```
 
 3. Exposing upload.
 
 Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your handler.
 
-'''python
+```python
 def handler(event, context):
     if (event['path'] == '/upload'):
         try:
@@ -130,7 +130,7 @@ def handler(event, context):
             },
             'body': json.dumps(response)
         }
-'''
+```
 
 3a. Exposng the route via API Gateway.
 
@@ -142,17 +142,5 @@ With relevant upload route now added to your lambda it's time to expose this the
 - Once attached we now need to point our API to the lambda and finally deploy it.
 
 - After deploying the API it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
-
-
-1. Edit react frontend
-2. Make s3 bucket and push react build to it
-3. Create a lambda from cli and attach it to API Gateway to expose
-
-aws iam create-role --role-name facial-rekognise --cli-input-json skeleton.json
-aws lambda create-function --function-name facial-rekog --runtime python3.8 --role arn:aws:iam::080284742429:role/facial_rekog --handler lambda.handler --zip-file fileb://lambda.zip
-
-4. Add code to lambda with rekognition
-5. App complete
-7. Create a gallery which loads an s3 library of previously uploaded image with rekognition data
 
 ---
