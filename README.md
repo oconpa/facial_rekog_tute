@@ -13,16 +13,7 @@ aws lambda create-function --function-name facial-rekog --runtime python3.8 --ro
 9. Build on dynamo record set to do some data science.
 10. Possible athena pull from s3
 
-<a href="http://fvcproductions.com"><img src="https://avatars1.githubusercontent.com/u/4284691?v=3&s=200" title="FVCproductions" alt="FVCproductions"></a>
-
-<!-- [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com) -->
-![Test Logo](/img/Melb_club_AWS_event1.png | width=10)
-![This Logo](/img/Melb_club_AWS_event1.png =250x250)
-
-
-<img src='/img/Melb_club_AWS_event1.png' width="200" height="400" />
-
-***INSERT GRAPHIC HERE (include hyperlink in image)***
+<img src='/img/Melb_club_AWS_event1.png' width="400" height="400" />
 
 # Facial Rekognition Tutorial
 
