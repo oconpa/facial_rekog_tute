@@ -92,6 +92,8 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
 ## Step 1 Provision both an s3 and lambda resource
 
 Create a new bucket with whatever name you desire. We will assume that throughout this tutorial you named your bucket -> facial-detection-'Your Full Name'
+
+You can do this via the console, just like in the image below or by executing the follow command in your cloud9 terminal: aws s3 mb facial-detection-'Your Full Name'
   
 ![Create S3](img/S3Create.png)
 
