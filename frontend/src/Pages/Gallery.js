@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import ImageGridList from './ImageGridList'
-import Charts from './Charts'
+import ImageGridList from '../Components/ImageGridList'
+import Charts from '../Components/Charts'
 
 function Gallery() {
     return (

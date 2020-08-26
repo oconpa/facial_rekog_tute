@@ -36,43 +36,65 @@ function MyDropzone() {
     }
   }
 
-  const uploadFile = () => {
+    async function uploadFile() {
     setLoading(true)
-    axios(
-      "REPLACE ME" + "?fileName=" +
-            uuid
-    ).then(response => {
-        // Getting the url from response
-        console.log(response)
-        const url = response.data;
-
-        // Initiating the PUT request to upload file  
-        console.log(pictures[0])
-        axios({
+    let response = await axios("REPLACEME?fileName=" + uuid);
+    const url = await response.data;
+    
+    await axios({
             method: "PUT",
             url: url,
             data: pictures[0],
             headers: { "Content-Type": "multipart/form-data" }
-        })
-            .then(res => {
-              axios({
-                method: "POST",
-                url: 'REPLACE ME',
-                data: uuid,
-              })
-              .then(res => {
-                console.log(res.data.FaceDetails)
-                setImage(false)
-                setScan(res.data.FaceDetails)
-                addToast('Saved To Gallery', { appearance: 'success', autoDismiss: true })
-                setLoading(false)
-              })
-              .catch(err => {
-                addToast(err, { appearance: 'error', autoDismiss: true })
-                console.log(err)
-              });
-            })
-    });
+          });
+    
+    response = await axios({
+            method: "POST",
+            url: 'REPLACE ME',
+            data: uuid,
+          })
+
+    console.log(response.data.FaceDetails)
+    setImage(false)
+    setScan(response.data.FaceDetails)
+    addToast('Saved To Gallery', { appearance: 'success', autoDismiss: true })
+    setLoading(false)
+            
+    // axios(
+    //   "REPLACE ME" + "?fileName=" +
+    //         uuid
+    // ).then(response => {
+        // Getting the url from response
+        // console.log(response)
+        // const url = response.data;
+
+        // Initiating the PUT request to upload file  
+        // console.log(pictures[0])
+        // axios({
+        //     method: "PUT",
+        //     url: url,
+        //     data: pictures[0],
+        //     headers: { "Content-Type": "multipart/form-data" }
+        // })
+            // .then(res => {
+            //   axios({
+            //     method: "POST",
+            //     url: 'REPLACE ME',
+            //     data: uuid,
+            //   })
+            //   .then(res => {
+            //     console.log(res.data.FaceDetails)
+            //     setImage(false)
+            //     setScan(res.data.FaceDetails)
+            //     addToast('Saved To Gallery', { appearance: 'success', autoDismiss: true })
+            //     setLoading(false)
+            //   })
+            //   .catch(err => {
+            //     addToast(err, { appearance: 'error', autoDismiss: true })
+            //     console.log(err)
+            //   });
+            // })
+    // });
 }
 
   return (

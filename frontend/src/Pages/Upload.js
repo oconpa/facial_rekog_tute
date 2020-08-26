@@ -1,5 +1,5 @@
 import React from 'react';
-import MyDropzone from './Dropzone'
+import MyDropzone from '../Components/Dropzone'
 import Typography from '@material-ui/core/Typography';
 
 function Upload() {
