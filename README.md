@@ -61,21 +61,22 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
    git clone https://github.com/oconpa/facial_rekog_tute.git
    ```
 
-2. Install yarn
-   ```shell
-   npm install -g yarn
-   ```
-
-3. Move into the cloned directory, and install all required packages. 
+2. Move into the cloned directory, and install all required packages. 
 
    ```shell
+   cd facial_rekog_tute
    cd frontend
-   yarn
    ```
 
-5. Run the React application
+3. Install libraries and dependancies
    ```shell
-   yarn start
+   npm install
+   ```
+   
+
+2. Run the React application
+   ```shell
+   npm run start
    ```
    
 6. Preview your Web Application
@@ -91,11 +92,19 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
 
 ## Step 1 Provision both an s3 and lambda resource
 
-Create a new bucket with whatever name you desire. We will assume that throughout this tutorial you named your bucket -> facial-detection-'Your Full Name'
+Create a new bucket with whatever name you desire. We will assume that throughout this tutorial you named your bucket -> facial-detection-'Your Full Name' @patrick explain briefly was S# is and how to navigate there int eh console.
 
-You can do this via the console, just like in the image below or by executing the follow command in your cloud9 terminal: aws s3 mb facial-detection-'Your Full Name'
+You can do this via the console like so:
   
 ![Create S3](img/S3Create.png)
+
+Or by executing the follow command in your Cloud9 terminal: 
+  
+  ```shell
+   aws s3 mb s3://facial-detection-'Your Full Name'
+   ```
+
+@patrick This is to hard to follow.  Can you make it step by step screenshots with arrows on where to click.
 
 And then provision a lambda.
 
@@ -108,32 +117,29 @@ Next we will setup our lambda with the correct imports and variables to be used 
 ```python
 import boto3
 import json
+import logging
 from botocore.exceptions import ClientError
 
 client = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-<Your Full Name>"
+bucket_name = "facial-detection-paulkukiel"
 expiration = 120
-```
 
-Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your lambda.
-
-```python
-def handler(event, context):
+def lambda_handler(event, context):
     if (event['path'] == '/upload'):
         try:
             response = s3.generate_presigned_url(
-                        'put_object',
-                        Params={
-                            'Bucket': bucket_name,
-                            'Key': event['queryStringParameters']['fileName'],
-                            'ContentType': 'multipart/form-data'
-                        },
-                        ExpiresIn=expiration)
+                'put_object',
+                Params = {
+                    'Bucket': bucket_name,
+                    'Key': event['queryStringParameters']['fileName'],
+                    'ContentType': 'multipart/form-data'
+                },
+                ExpiresIn = expiration)
         except ClientError as e:
             logging.error(e)
             return None
-
+            
         return {
             'statusCode': 200,
             'headers': {
@@ -142,6 +148,8 @@ def handler(event, context):
             'body': json.dumps(response)
         }
 ```
+
+Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your lambda.
 
 #### Exposing the route via API Gateway
 
