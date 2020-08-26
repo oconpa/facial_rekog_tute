@@ -10,6 +10,8 @@
 
 ![App Demo](img/hHv0y1ayU9.gif)
 
+***App Link (Demo)***
+
 http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
 
 ## Table of Contents
@@ -29,10 +31,24 @@ http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
 
 <br />
 
----
+## Definitions
+|Term|Description|
+|----|-----------|
+|AWS| Amazon Web Services|
+|S3| Simple Storage Solution, object storage service, also can be used to host static websites|
+|Cloud 9| An IDE that runs in a browser inside your AWS account|
+|Lambda| AWS's servlerss option, upload code that runs without users needed to provision servers|
+|Rekognition| ML service interface in AWS|
+|API Gateway| A proxy to aws services that enables an authentigation check point|
+|ML| Machine Learning|
+
+## Overview
+
+With a rising potential on what machine learning has to offer, AWS offers an easy plug-n-play module to integrate machine learning services very easily. AWS Rekognition is AWS's inbuilt ML service.
 
 ## Setting up your Development Environment
-<br />
+
+Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget about access keys and secrets, which a cloud 9 environment you can develop from within the VPC.
 
 ### Provisioning your Cloud 9 IDE
 
@@ -44,16 +60,13 @@ http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
 
 4. Set the **name** of your environment to be 'MLWorkshop'.\
    Click 'Next Step'.\
-   Under 'Instance Type' select 'Other instance type', and search for 't3.medium' in the dropdown search.
+   Under 'Instance Type' select 'Other instance type', and search for 't3.small' in the dropdown search.
 
 5. Leave everything else as default.\
    Click 'Next Step'.\
    Click 'Create Environment'.
 
 ### Setting up your Cloud 9 with React application
-
-From the cloud9 service in aws, there should now be a c9 provisioned. Clicking on the **Open IDE** button should then open your c9; might take a bit if you haven't used it in a while.
-<br />
 
 1. Clone the current repository to your Cloud9 IDE.
    
@@ -64,82 +77,98 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
 2. Move into the cloned directory, and install all required packages. 
 
    ```shell
-   cd facial_rekog_tute
-   cd frontend
-   ```
-
-3. Install libraries and dependancies
-   ```shell
+   cd facial_rekog_tute/frontend
    npm install
    ```
-   
 
-2. Run the React application
+3. Run the React application
    ```shell
    npm run start
    ```
    
-6. Preview your Web Application
+4. Preview your Web Application
    
    After the app has compiled successfully, click 'Tools' in the toolbar up top, click 'Preview' and finally click 'Preview Running Application'. 
    Open the preview in another tab by clicking the arrow / box button on the right of the search bar. 
    
-![yarn GIF](img/yarnStart.gif)
-
 **You should see a basic web app in your browser! However, there is currently no functionality. Let's use AWS to fix this!**
 
 ---
 
-## Step 1 Provision both an s3 and lambda resource
+## Create an S3 + CORS
 
-Create a new bucket with whatever name you desire. We will assume that throughout this tutorial you named your bucket -> facial-detection-'Your Full Name' @patrick explain briefly was S# is and how to navigate there int eh console.
+1. From the aws console, search up 'S3' in the search bar, and click on the first option.
 
-You can do this via the console like so:
-  
+2. Click 'Create Bucket'
+
+3. Name your bucket facial-detection-**'Replace with your full name'**
+
+4. Click 'Create'
+
 ![Create S3](img/S3Create.png)
 
-Or by executing the follow command in your Cloud9 terminal: 
-  
-  ```shell
-   aws s3 mb s3://facial-detection-'Your Full Name'
-   ```
+5. Goto te bucket you just created, and click on the **Permission** tab. Then to **CORS configuration** and paste the following code:
 
-@patrick This is to hard to follow.  Can you make it step by step screenshots with arrows on where to click.
+```code
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+<CORSRule>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedMethod>PUT</AllowedMethod>
+    <AllowedHeader>*</AllowedHeader>
+</CORSRule>
+</CORSConfiguration>
+```
 
-And then provision a lambda.
+5. Click 'Save'
 
-![Lambda GIF](img/lambdaCreate.gif)
+Image of CORS
 
-## Step 2 Expose Upload Route
+## Create the lambda (backend)
 
-Next we will setup our lambda with the correct imports and variables to be used later. Copy the following code and edit the bucket name to match the bucket you created above.
+1. From the aws console, search up 'Lambda' in the search bar, and click on the first option.
+
+2. Click 'Create function'
+
+3. On the create function page:
+- Name your function **upload**
+- Runtime **Python 3.8**
+
+4. Click function
+
+Image
+
+5. Once created click into the Permissions tab. Under **Execution role** will be a role name, Click it.
+
+6. In the newly opened window click on the blue button 'Attach policies'. In the search bar search for the following policies, checking the box once you've found them.
+- AmazonS3FullAccess
+- AmazonRekognitionFullAccess
+
+7. Click 'Attach policy'
+
+8. After attaching the policy go back to your lambda and under the configuration tab in the function code paste:
 
 ```python
 import boto3
 import json
-import logging
-from botocore.exceptions import ClientError
 
 client = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-paulkukiel"
+bucket_name = "facial-detection-REPLACEME"
 expiration = 120
 
+
 def lambda_handler(event, context):
+    print(event)
     if (event['path'] == '/upload'):
-        try:
-            response = s3.generate_presigned_url(
-                'put_object',
-                Params = {
-                    'Bucket': bucket_name,
-                    'Key': event['queryStringParameters']['fileName'],
-                    'ContentType': 'multipart/form-data'
-                },
-                ExpiresIn = expiration)
-        except ClientError as e:
-            logging.error(e)
-            return None
-            
+        response = s3.generate_presigned_url(
+                    'put_object',
+                    Params={
+                        'Bucket': bucket_name,
+                        'Key': event['queryStringParameters']['fileName'],
+                        'ContentType': 'multipart/form-data'
+                    },
+                    ExpiresIn=expiration)
         return {
             'statusCode': 200,
             'headers': {
@@ -147,50 +176,6 @@ def lambda_handler(event, context):
             },
             'body': json.dumps(response)
         }
-```
-
-Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your lambda.
-
-#### Exposing the route via API Gateway
-
-With relevant upload route now added to your lambda it's time to expose this the route on API Gateway. To do this we need to:
-- Create a new public REST API from the API service.
-
-- Create a resource named upload, and attach a GET method to it.
-
-![API GIF](img/APICreate.gif)
-
-- Point your API to the lambda.
-
-- Deploy and copy the upload link.
-
-![API2 GIF](img/deployAPI.gif)
-
----
-
-## Step 3 Connecting the React Frontend to the Upload Route Backend
-
-After deploying the API and copying the link, it can now be consumed and used in the frontend.
-
-![API3 GIF](img/ReactLink.gif)
-
-it's can be used in our app. Navigate to the deployed section of API Gateway copying the link to be used in your app.
-
-![API4 GIF](img/ReactStart.gif)
-
-## Challenge Time
-
-Congradulation on getting this far in the workshop. As promised this section is your opportunity to reap on some AWS credits. In this workshop we have 4 challenges for you to try out. Each challenge realtes to one functionality in the ML React App, and should ahev an attach gif explaining on how this functionality works. Your job is to add the code for each challenege to the lambda you provisioned above, open the route just like you did for the upload route on the API you created, and find where that route is added in the react app. 
-
-For reference as you complete the challeneges your app should run similar to http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
-
-Good luck, remember the faster you complete the challeneges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
-
-#### Challenge 1 detect
-
-![Detect GIF](img/detect.gif)
-
-```python
     elif (event['path'] == '/detect'):
         response = client.detect_faces(
             Image={
@@ -208,8 +193,6 @@ Good luck, remember the faster you complete the challeneges and show to your tra
             Key=str(event['body'][:-4]) + '.json',
         )
 
-        
-        print(response)
         return {
             'statusCode': 200,
             'headers': {
@@ -217,13 +200,6 @@ Good luck, remember the faster you complete the challeneges and show to your tra
             },
             'body': json.dumps(response)
         }
-```
-
-#### Challenge 2 delete
-
-![Delete GIF](img/delete.gif)
-
-```python
     elif (event['path'] == '/delete'):
         data = json.loads(event['body'])
         key = data['file'].split('/')[3].split('?')[0]
@@ -242,13 +218,6 @@ Good luck, remember the faster you complete the challeneges and show to your tra
             },
             'body': json.dumps({'Message': 'Success'})
         }
-```
-
-#### Challenge 3 listgallery
-
-![list GIF](img/listgallery.gif)
-
-```python
     elif (event['path'] == '/listgallery'):
         response = s3.list_objects_v2(
             Bucket=bucket_name
@@ -270,8 +239,7 @@ Good luck, remember the faster you complete the challeneges and show to your tra
                         },
                         ExpiresIn=expiration)
             alist.append({'src': link, 'thumbnail': link})
-        print(alist)
-        
+
         return {
             'statusCode': 200,
             'headers': {
@@ -279,13 +247,6 @@ Good luck, remember the faster you complete the challeneges and show to your tra
             },
             'body': json.dumps(alist)
         }
-```
-
-#### Challenge 4 charts
-
-![charts GIF](img/charts.gif)
-
-```python
     elif (event['path'] == '/charts'):
         if (event['body'] == 'age'):
             response = s3.list_objects_v2(
@@ -357,3 +318,195 @@ Good luck, remember the faster you complete the challeneges and show to your tra
                 'body': json.dumps(chart)
             }
 ```
+
+9. On line 6 you will need to replace 'REPLACEME' with the bucket you created earlier on. E.g. if you named your bucket facial-detection-johnsmith, then line 6 would look like
+
+```python
+bucket_name = "facial-detection-johnsmith"
+```
+
+6. Click 'Save'
+
+## Create and Expose API Gateway
+
+1. Scroll to the top of the lambda to the designer. Click **Add Trigger**.
+
+2. In the trigger configuration select:
+- API Gateway
+- API: Create an API
+- API type: REST API
+- Security: Open
+
+3. Click **Add**
+
+4. Scroll down to the API Gateway table and click on the upload-API link to open a new window up.
+
+## Connecting the React Frontend to the Upload Route Backend
+
+1. From the API Gateway opened up in the last step there should be a **Stages**, option on the left, click into it.
+
+2. Expand all the menus under default until you see the GET method under /upload. Click into it and copy the **Invoke URL**
+
+3. Navigate back to your cloud 9. On line 42 of frontend/src/Pages/Dropzone.js you will subsitute **REPLACE ME** with the API link you copied from API Gateway concatenating with the following "?fileName=" string. The link should look similar to this, but with your unique API link:
+
+```javascript
+"https://qvvnlsnd4l.execute-api.ap-southeast-2.amazonaws.com/default/upload?fileName=" +
+```
+
+4. Test the app
+
+## Detection Time
+
+Congradulations on getting this far in the workshop. As promised this section is your opportunity to reap on some AWS credits. In this workshop we have 4 challenges for you to try out. Each challenge realtes to one functionality in the ML React App, and should ahev an attach gif explaining on how this functionality works. Your job is to add the code for each challenege to the lambda you provisioned above, open the route just like you did for the upload route on the API you created, and find where that route is added in the react app. 
+
+For reference as you complete the challeneges your app should run similar to http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
+
+Good luck, remember the faster you complete the challeneges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
+
+#### Expose Detect on API Gateway
+
+1. In the API Gateway tab you had opened earlier open Resources on the left vertical menu.
+
+**If you closed it before, goto API gateway by seraching API Gateway in the search bar, choosing the first option and clicking into upload-API from your API list***
+
+1. In the API Gateway tab you had opened earlier open Resources on the left vertical menu.
+
+2. Click on the /, then select Actions and select Create Resources.
+
+3. On the New Child Resource window:
+- Set **Resource Name** to detect
+- And Tick **Enable API Gateway CORS**
+
+4. Click **Create Resource**
+
+5. Select the newly created /detect Resource, Click **Actions** and select **Create Method**
+
+6. From dropdown select **POST** and confirm.
+
+7. On the **/detect - POST - Setup** leave everything as default changing only:
+- Tick **Use Lambda Proxy integration**
+- Put **upload** in lambda function
+
+8. Click **Save**
+
+#### Connect /detect to React Frontend
+
+1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
+
+2. Once redirected to the stages tab, expand all your options, selecting the POST method under /detect.
+
+3. Copy the **Invoke URL**, the goto your cloud 9.
+
+4. In frontend/src/Pages/Dropzone.js, on line 60 substitute 'REPLACE ME' with the invoke URL you copied in the previous step.
+
+5. Test APP.
+
+#### Challenge 2 delete
+
+Rinse and repeat the previous step except this time with a delete method and /delete resource.
+
+1. In your upload-API in API Gateway open Resources on the left vertical menu.
+
+2. Click on the /, then select Actions and select Create Resources.
+
+3. On the New Child Resource window:
+- Set **Resource Name** to delete
+- And Tick **Enable API Gateway CORS**
+
+4. Click **Create Resource**
+
+5. Select the newly created /delete Resource, Click **Actions** and select **Create Method**
+
+6. From dropdown select **DELETE** and confirm.
+
+7. On the **/delete - DELETE - Setup** leave everything as default changing only:
+- Tick **Use Lambda Proxy integration**
+- Put **upload** in lambda function
+
+8. Click **Save**
+
+#### Connect /delete to React Frontend
+
+1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
+
+2. Once redirected to the stages tab, expand all your options, selecting the DELETE method under /delete.
+
+3. Copy the **Invoke URL**, and goto your cloud 9.
+
+4. In frontend/src/Pages/ImageGridList.js, on line 42 substitute 'REPLACE ME' with the invoke URL you copied in the previous step.
+
+5. Test APP.
+
+#### Challenge 3 listgallery
+
+Rinse and repeat the previous step except this time with a delete method and /delete resource.
+
+1. In your upload-API in API Gateway open Resources on the left vertical menu.
+
+2. Click on the /, then select Actions and select Create Resources.
+
+3. On the New Child Resource window:
+- Set **Resource Name** to listgallery
+- And Tick **Enable API Gateway CORS**
+
+4. Click **Create Resource**
+
+5. Select the newly created /listgallery Resource, Click **Actions** and select **Create Method**
+
+6. From dropdown select **GET** and confirm.
+
+7. On the **/listgallery - GET - Setup** leave everything as default changing only:
+- Tick **Use Lambda Proxy integration**
+- Put **upload** in lambda function
+
+8. Click **Save**
+
+#### Connect /listgallery to React Frontend
+
+1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
+
+2. Once redirected to the stages tab, expand all your options, selecting the GET method under /listgallery.
+
+3. Copy the **Invoke URL**, and goto your cloud 9.
+
+4. In frontend/src/Pages/ImageGridList.js, on line 33 substitute 'REPLACE ME' with the invoke URL you copied in the previous step.
+
+5. Test APP.
+
+#### Challenge 4 charts
+
+Rinse and repeat the previous step except this time with a delete method and /charts resource.
+
+1. In your upload-API in API Gateway open Resources on the left vertical menu.
+
+2. Click on the /, then select Actions and select Create Resources.
+
+3. On the New Child Resource window:
+- Set **Resource Name** to charts
+- And Tick **Enable API Gateway CORS**
+
+4. Click **Create Resource**
+
+5. Select the newly created /charts Resource, Click **Actions** and select **Create Method**
+
+6. From dropdown select **POST** and confirm.
+
+7. On the **/charts - POST - Setup** leave everything as default changing only:
+- Tick **Use Lambda Proxy integration**
+- Put **upload** in lambda function
+
+8. Click **Save**
+
+#### Connect /charts to React Frontend
+
+1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
+
+2. Once redirected to the stages tab, expand all your options, selecting the PSOT method under /charts.
+
+3. Copy the **Invoke URL**, and goto your cloud 9.
+
+4. In frontend/src/Pages/Charts.js, on line 12 substitute 'REPLACE ME' with the invoke URL you copied in the previous step.
+
+5. Test APP.
+
+And that's it you've made it to the end. Let your trainer know so your in the running to get some AWS credits. Don't forget to complete the survey and join the AWS facebook to keep up with all things AWS.
