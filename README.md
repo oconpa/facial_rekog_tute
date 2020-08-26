@@ -61,21 +61,22 @@ From the cloud9 service in aws, there should now be a c9 provisioned. Clicking o
    git clone https://github.com/oconpa/facial_rekog_tute.git
    ```
 
-2. Install yarn
-   ```shell
-   npm install -g yarn
-   ```
-
-3. Move into the cloned directory, and install all required packages. 
+2. Move into the cloned directory, and install all required packages. 
 
    ```shell
+   cd facial_rekog_tute
    cd frontend
-   yarn
    ```
 
-5. Run the React application
+3. Install libraries and dependancies
    ```shell
-   yarn start
+   npm install
+   ```
+   
+
+2. Run the React application
+   ```shell
+   npm run start
    ```
    
 6. Preview your Web Application
