@@ -101,7 +101,7 @@ You can do this via the console like so:
 Or by executing the follow command in your Cloud9 terminal: 
   
   ```shell
-   aws s3 mb facial-detection-'Your Full Name'
+   aws s3 mb s3://facial-detection-'Your Full Name'
    ```
 
 @patrick This is to hard to follow.  Can you make it step by step screenshots with arrows on where to click.
