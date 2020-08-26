@@ -117,32 +117,29 @@ Next we will setup our lambda with the correct imports and variables to be used 
 ```python
 import boto3
 import json
+import logging
 from botocore.exceptions import ClientError
 
 client = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-<Your Full Name>"
+bucket_name = "facial-detection-paulkukiel"
 expiration = 120
-```
 
-Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your lambda.
-
-```python
-def handler(event, context):
+def lambda_handler(event, context):
     if (event['path'] == '/upload'):
         try:
             response = s3.generate_presigned_url(
-                        'put_object',
-                        Params={
-                            'Bucket': bucket_name,
-                            'Key': event['queryStringParameters']['fileName'],
-                            'ContentType': 'multipart/form-data'
-                        },
-                        ExpiresIn=expiration)
+                'put_object',
+                Params = {
+                    'Bucket': bucket_name,
+                    'Key': event['queryStringParameters']['fileName'],
+                    'ContentType': 'multipart/form-data'
+                },
+                ExpiresIn = expiration)
         except ClientError as e:
             logging.error(e)
             return None
-
+            
         return {
             'statusCode': 200,
             'headers': {
@@ -151,6 +148,8 @@ def handler(event, context):
             'body': json.dumps(response)
         }
 ```
+
+Uploading involves creating a route and exposing it on lambda to serve the purpose of saving along with it's Machine Learning detection results to the s3. To do this we must first provide the relevant code on the lambda. Copy the following code and add it to your lambda.
 
 #### Exposing the route via API Gateway
 
