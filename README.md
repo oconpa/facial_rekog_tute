@@ -97,7 +97,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 ## Create an S3 + CORS
 
-1. From the aws console, search up 'S3' in the search bar, and click on the first option.
+1. From the aws console, search up 'S3' in the search bar, and click on the first option.  If you can't find it click [here](https://s3.console.aws.amazon.com/s3/home?region=ap-southeast-2#)
 
 2. Click 'Create Bucket'
 
@@ -152,171 +152,155 @@ Image
 import boto3
 import json
 
-client = boto3.client('rekognition')
+rekognition = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-REPLACEME"
+bucket_name = "facial-detection-paulkukiel"
 expiration = 120
 
-
 def lambda_handler(event, context):
-    print(event)
-    if (event['path'] == '/upload'):
-        response = s3.generate_presigned_url(
-                    'put_object',
+    #print(event)
+    path = event['path']
+    body = ''
+    if (path == '/upload'):
+        body = doUpload(event)
+    elif (path == '/detect'):
+        body = doFacialDetection(event)
+    elif (path == '/delete'):
+        body = doDelete(event)
+    elif (path == '/listgallery'):
+        body = doListGallery(event)
+    elif (path == '/charts'):
+        body = doChart(event)
+    
+    return {
+            'statusCode': 200,
+            'headers': {
+                "access-control-allow-origin": "*",
+                "access-control-allow-methods": "*"
+                
+            },
+            'body': body
+    }
+    
+
+# Upload method
+def doUpload(event):
+    response = s3.generate_presigned_url(
+        'put_object',
+        Params={
+            'Bucket': bucket_name,
+            'Key': event['queryStringParameters']['fileName'],
+            'ContentType': 'multipart/form-data'
+        },
+        ExpiresIn=expiration)
+        
+    body = json.dumps(response)
+    return body
+
+# Pass a s3 item refernce to 
+def doFacialDetection(event):
+    response = rekognition.detect_faces(
+        Image={
+            'S3Object': {
+                'Bucket': bucket_name,
+                'Name': event['body'],
+            }
+        },
+        Attributes=['ALL']
+    )
+    
+    s3.put_object(
+        Body=(bytes(json.dumps(response).encode('UTF-8'))),
+        Bucket=bucket_name,
+        Key=str(event['body'][:-4]) + '.json',
+    )
+    return json.dumps(response)
+
+def doListGallery(event):
+    response = s3.list_objects_v2(Bucket=bucket_name)
+
+    for i in range(len(response['Contents'])-1, -1, -1):
+        if 'LastModified' in response['Contents'][i]:
+            del response['Contents'][i]['LastModified']
+        if response['Contents'][i]['Key'][-5:] == '.json':
+            response['Contents'].pop(i)
+
+    alist = []
+    for j in response['Contents']:
+        link = s3.generate_presigned_url(
+                    'get_object',
                     Params={
                         'Bucket': bucket_name,
-                        'Key': event['queryStringParameters']['fileName'],
-                        'ContentType': 'multipart/form-data'
+                        'Key': j['Key'],
                     },
                     ExpiresIn=expiration)
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps(response)
-        }
-    elif (event['path'] == '/detect'):
-        response = client.detect_faces(
-            Image={
-                'S3Object': {
-                    'Bucket': bucket_name,
-                    'Name': event['body'],
-                }
-            },
-            Attributes=['ALL']
-        )
-        
-        s3.put_object(
-            Body=(bytes(json.dumps(response).encode('UTF-8'))),
-            Bucket=bucket_name,
-            Key=str(event['body'][:-4]) + '.json',
-        )
+        alist.append({'src': link, 'thumbnail': link})
 
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps(response)
-        }
-    elif (event['path'] == '/delete'):
-        data = json.loads(event['body'])
-        key = data['file'].split('/')[3].split('?')[0]
-        s3.delete_object(
-                Bucket=bucket_name,
-                Key=key
-            )
-        s3.delete_object(
-                Bucket=bucket_name,
-                Key=key[:-4] + '.json'
-            )
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps({'Message': 'Success'})
-        }
-    elif (event['path'] == '/listgallery'):
+    return json.dumps(alist)
+
+def doChart(event):
+    if (event['body'] == 'age'):
+        response = s3.list_objects_v2( Bucket=bucket_name)
+        
+        alist = []
+        for item in response['Contents']:
+            if (item['Key'][-5:] == '.json'):
+                resp = s3.get_object(
+                    Bucket=bucket_name,
+                    Key=item['Key']
+                )
+                alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+        
+        chart = [0, 0, 0, 0, 0, 0]
+        for i in alist:
+            if len(i['FaceDetails']) != 0:
+                for j in i['FaceDetails']:
+                    age = (j['AgeRange']['Low'] + j['AgeRange']['High'])/2
+                    if age > 89:
+                        chart[5] += 1
+                    elif age > 69:
+                        chart[4] += 1
+                    elif age > 49:
+                        chart[3] += 1
+                    elif age > 39:
+                        chart[2] += 1
+                    elif age > 19:
+                        chart[1] += 1
+                    elif age >= 0:
+                        chart[0] += 1
+
+    elif (event['body'] == 'smile'):
         response = s3.list_objects_v2(
             Bucket=bucket_name
-            )
-
-        for i in range(len(response['Contents'])-1, -1, -1):
-            if 'LastModified' in response['Contents'][i]:
-                del response['Contents'][i]['LastModified']
-            if response['Contents'][i]['Key'][-5:] == '.json':
-                response['Contents'].pop(i)
-
+        )
+        
         alist = []
-        for j in response['Contents']:
-            link = s3.generate_presigned_url(
-                        'get_object',
-                        Params={
-                            'Bucket': bucket_name,
-                            'Key': j['Key'],
-                        },
-                        ExpiresIn=expiration)
-            alist.append({'src': link, 'thumbnail': link})
+        for item in response['Contents']:
+            if (item['Key'][-5:] == '.json'):
+                resp = s3.get_object(
+                    Bucket=bucket_name,
+                    Key=item['Key']
+                )
+                alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+        
+        chart = [0, 0]
+        for i in alist:
+            if len(i['FaceDetails']) != 0:
+                for j in i['FaceDetails']:
+                    if j['Smile']['Value']:
+                        chart[0] += 1
+                    else:
+                        chart[1] += 1
 
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps(alist)
-        }
-    elif (event['path'] == '/charts'):
-        if (event['body'] == 'age'):
-            response = s3.list_objects_v2(
-                Bucket=bucket_name
-            )
-            
-            alist = []
-            for item in response['Contents']:
-                if (item['Key'][-5:] == '.json'):
-                    resp = s3.get_object(
-                        Bucket=bucket_name,
-                        Key=item['Key']
-                    )
-                    alist.append(json.loads(resp['Body'].read().decode('utf-8')))
-            
-            chart = [0, 0, 0, 0, 0, 0]
-            for i in alist:
-                if len(i['FaceDetails']) != 0:
-                    for j in i['FaceDetails']:
-                        age = (j['AgeRange']['Low'] + j['AgeRange']['High'])/2
-                        if age > 89:
-                            chart[5] += 1
-                        elif age > 69:
-                            chart[4] += 1
-                        elif age > 49:
-                            chart[3] += 1
-                        elif age > 39:
-                            chart[2] += 1
-                        elif age > 19:
-                            chart[1] += 1
-                        elif age >= 0:
-                            chart[0] += 1
-
-            return {
-                'statusCode': 200,
-                'headers': {
-                    "access-control-allow-origin": "*"
-                },
-                'body': json.dumps(chart)
-            }
-        elif (event['body'] == 'smile'):
-            response = s3.list_objects_v2(
-                Bucket=bucket_name
-            )
-            
-            alist = []
-            for item in response['Contents']:
-                if (item['Key'][-5:] == '.json'):
-                    resp = s3.get_object(
-                        Bucket=bucket_name,
-                        Key=item['Key']
-                    )
-                    alist.append(json.loads(resp['Body'].read().decode('utf-8')))
-            
-            chart = [0, 0]
-            for i in alist:
-                if len(i['FaceDetails']) != 0:
-                    for j in i['FaceDetails']:
-                        if j['Smile']['Value']:
-                            chart[0] += 1
-                        else:
-                            chart[1] += 1
-
-            return {
-                'statusCode': 200,
-                'headers': {
-                    "access-control-allow-origin": "*"
-                },
-                'body': json.dumps(chart)
-            }
+        return json.dumps(chart)
+    
+# Delete Method
+def doDelete(event):
+    data = event['queryStringParameters']['fileName']
+    key = data.split('/')[3].split('?')[0]
+    s3.delete_object( Bucket=bucket_name, Key=key )
+    s3.delete_object( Bucket=bucket_name, Key=key[:-4] + '.json' )
+    return json.dumps({'Message': 'Success'})
 ```
 
 9. On line 6 you will need to replace 'REPLACEME' with the bucket you created earlier on. E.g. if you named your bucket facial-detection-johnsmith, then line 6 would look like
@@ -329,17 +313,31 @@ bucket_name = "facial-detection-johnsmith"
 
 ## Create and Expose API Gateway
 
-1. Scroll to the top of the lambda to the designer. Click **Add Trigger**.
+We now need a way to expose the lambda function to the world, we can acomplish this with APIGateway.  In the AWS Console serach for 'api gateway' or click [here](https://ap-southeast-2.console.aws.amazon.com/apigateway/home?region=ap-southeast-2#/apis).  In the top right click "Create API".  There are number of Gateways we can create we will select "REST API" (note don't accidentally select the REST API private)  Click "Build".
 
-2. In the trigger configuration select:
-- API Gateway
-- API: Create an API
-- API type: REST API
-- Security: Open
+![Create REST](img/restapi-1.png)
 
-3. Click **Add**
+We will be creating a new REST Api, give your API a name, "rekognition" will work for this example.  Then click "Create API"
 
-4. Scroll down to the API Gateway table and click on the upload-API link to open a new window up.
+![Create REST](img/restapi-2.png)
+
+Click "Actions" and select "Create Resource"
+
+![Create resource](img/creatresource-1.png)
+
+Select the check box "Configure as proxy resourse".  We want every request to be passed directly to the lambda function created, applicaiton code will take care of the http method.  Click "Create Resource"
+
+![Create resource](img/creatresource-2.png)
+
+Type in the name of the lambda function we created "rekognition" and click save, when requested to confirm permission click "OK" we are allowing this API Gateway to invike the lambda function.
+
+![Create resource](img/creatresource-3.png)
+ 
+We have now configured the API but not yet deployed it. Click "Actions" then "Deploy API", int eh drop down for Deployment Stage select "[New Stage]", privide "default" as the name then click deploy.
+
+![Deploy](img/stage.png)
+
+You will see a **Invoke URL**  copy this you will need it in the front end app.  This is the http endpoint, effectly the entry point to our lambda function from the world.
 
 ## Connecting the React Frontend to the Upload Route Backend
 
@@ -363,32 +361,6 @@ For reference as you complete the challeneges your app should run similar to htt
 
 Good luck, remember the faster you complete the challeneges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
 
-#### Expose Detect on API Gateway
-
-1. In the API Gateway tab you had opened earlier open Resources on the left vertical menu.
-
-**If you closed it before, goto API gateway by seraching API Gateway in the search bar, choosing the first option and clicking into upload-API from your API list***
-
-1. In the API Gateway tab you had opened earlier open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to detect
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /detect Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **POST** and confirm.
-
-7. On the **/detect - POST - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
-
 #### Connect /detect to React Frontend
 
 1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
@@ -402,28 +374,6 @@ Good luck, remember the faster you complete the challeneges and show to your tra
 5. Test APP.
 
 #### Challenge 2 delete
-
-Rinse and repeat the previous step except this time with a delete method and /delete resource.
-
-1. In your upload-API in API Gateway open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to delete
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /delete Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **DELETE** and confirm.
-
-7. On the **/delete - DELETE - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
 
 #### Connect /delete to React Frontend
 
@@ -439,28 +389,6 @@ Rinse and repeat the previous step except this time with a delete method and /de
 
 #### Challenge 3 listgallery
 
-Rinse and repeat the previous step except this time with a delete method and /delete resource.
-
-1. In your upload-API in API Gateway open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to listgallery
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /listgallery Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **GET** and confirm.
-
-7. On the **/listgallery - GET - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
-
 #### Connect /listgallery to React Frontend
 
 1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
@@ -474,28 +402,6 @@ Rinse and repeat the previous step except this time with a delete method and /de
 5. Test APP.
 
 #### Challenge 4 charts
-
-Rinse and repeat the previous step except this time with a delete method and /charts resource.
-
-1. In your upload-API in API Gateway open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to charts
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /charts Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **POST** and confirm.
-
-7. On the **/charts - POST - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
 
 #### Connect /charts to React Frontend
 
