@@ -313,19 +313,31 @@ bucket_name = "facial-detection-johnsmith"
 
 ## Create and Expose API Gateway
 
-We now need a way to expose the lambda function to the world, we can acomplish this with APIGateway.  In the AWS Console serach for 'api gateway' or click [here](https://ap-southeast-2.console.aws.amazon.com/apigateway/home?region=ap-southeast-2#/apis).  In the top right click "Create API".  There are number of Gateways we can create we will select "REST API" (not don;t accidentally select the REST API private)
+We now need a way to expose the lambda function to the world, we can acomplish this with APIGateway.  In the AWS Console serach for 'api gateway' or click [here](https://ap-southeast-2.console.aws.amazon.com/apigateway/home?region=ap-southeast-2#/apis).  In the top right click "Create API".  There are number of Gateways we can create we will select "REST API" (note don't accidentally select the REST API private)  Click "Build".
 
-1. Scroll to the top of the lambda to the designer. Click **Add Trigger**.
+![Create REST](img/restapi-1.png)
 
-2. In the trigger configuration select:
-- API Gateway
-- API: Create an API
-- API type: REST API
-- Security: Open
+We will be creating a new REST Api, give your API a name, "rekognition" will work for this example.  Then click "Create API"
 
-3. Click **Add**
+![Create REST](img/restapi-2.png)
 
-4. Scroll down to the API Gateway table and click on the upload-API link to open a new window up.
+Click "Actions" and select "Create Resource"
+
+![Create resource](img/creatresource-1.png)
+
+Select the check box "Configure as proxy resourse".  We want every request to be passed directly to the lambda function created, applicaiton code will take care of the http method.  Click "Create Resource"
+
+![Create resource](img/creatresource-2.png)
+
+Type in the name of the lambda function we created "rekognition" and click save, when requested to confirm permission click "OK" we are allowing this API Gateway to invike the lambda function.
+
+![Create resource](img/creatresource-3.png)
+ 
+We have now configured the API but not yet deployed it. Click "Actions" then "Deploy API", int eh drop down for Deployment Stage select "[New Stage]", privide "default" as the name then click deploy.
+
+![Deploy](img/stage.png)
+
+You will see a **Invoke URL**  copy this you will need it in the front end app.  This is the http endpoint, effectly the entry point to our lambda function from the world.
 
 ## Connecting the React Frontend to the Upload Route Backend
 
@@ -349,32 +361,6 @@ For reference as you complete the challeneges your app should run similar to htt
 
 Good luck, remember the faster you complete the challeneges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
 
-#### Expose Detect on API Gateway
-
-1. In the API Gateway tab you had opened earlier open Resources on the left vertical menu.
-
-**If you closed it before, goto API gateway by seraching API Gateway in the search bar, choosing the first option and clicking into upload-API from your API list***
-
-1. In the API Gateway tab you had opened earlier open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to detect
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /detect Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **POST** and confirm.
-
-7. On the **/detect - POST - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
-
 #### Connect /detect to React Frontend
 
 1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
@@ -388,28 +374,6 @@ Good luck, remember the faster you complete the challeneges and show to your tra
 5. Test APP.
 
 #### Challenge 2 delete
-
-Rinse and repeat the previous step except this time with a delete method and /delete resource.
-
-1. In your upload-API in API Gateway open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to delete
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /delete Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **DELETE** and confirm.
-
-7. On the **/delete - DELETE - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
 
 #### Connect /delete to React Frontend
 
@@ -425,28 +389,6 @@ Rinse and repeat the previous step except this time with a delete method and /de
 
 #### Challenge 3 listgallery
 
-Rinse and repeat the previous step except this time with a delete method and /delete resource.
-
-1. In your upload-API in API Gateway open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to listgallery
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /listgallery Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **GET** and confirm.
-
-7. On the **/listgallery - GET - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
-
 #### Connect /listgallery to React Frontend
 
 1. In your API gateway under Resources, click **Actions** and select **Deploy API**. Select **default** for Deployment Stage and Click **Deploy**.
@@ -460,28 +402,6 @@ Rinse and repeat the previous step except this time with a delete method and /de
 5. Test APP.
 
 #### Challenge 4 charts
-
-Rinse and repeat the previous step except this time with a delete method and /charts resource.
-
-1. In your upload-API in API Gateway open Resources on the left vertical menu.
-
-2. Click on the /, then select Actions and select Create Resources.
-
-3. On the New Child Resource window:
-- Set **Resource Name** to charts
-- And Tick **Enable API Gateway CORS**
-
-4. Click **Create Resource**
-
-5. Select the newly created /charts Resource, Click **Actions** and select **Create Method**
-
-6. From dropdown select **POST** and confirm.
-
-7. On the **/charts - POST - Setup** leave everything as default changing only:
-- Tick **Use Lambda Proxy integration**
-- Put **upload** in lambda function
-
-8. Click **Save**
 
 #### Connect /charts to React Frontend
 
