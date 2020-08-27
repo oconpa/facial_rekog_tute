@@ -175,7 +175,9 @@ def lambda_handler(event, context):
     return {
             'statusCode': 200,
             'headers': {
-                "access-control-allow-origin": "*"
+                "access-control-allow-origin": "*",
+                "access-control-allow-methods": "*"
+                
             },
             'body': body
     }
@@ -195,7 +197,7 @@ def doUpload(event):
     body = json.dumps(response)
     return body
 
-#Use AWS Rekognition to detect faces in images in S3
+# Pass a s3 item refernce to 
 def doFacialDetection(event):
     response = rekognition.detect_faces(
         Image={
@@ -214,7 +216,6 @@ def doFacialDetection(event):
     )
     return json.dumps(response)
 
-# Retunr a list of all images to display in a agllery
 def doListGallery(event):
     response = s3.list_objects_v2(Bucket=bucket_name)
 
@@ -236,7 +237,6 @@ def doListGallery(event):
         alist.append({'src': link, 'thumbnail': link})
 
     return json.dumps(alist)
-
 
 def doChart(event):
     if (event['body'] == 'age'):
@@ -296,8 +296,8 @@ def doChart(event):
     
 # Delete Method
 def doDelete(event):
-    data = json.loads(event['body'])
-    key = data['file'].split('/')[3].split('?')[0]
+    data = event['queryStringParameters']['fileName']
+    key = data.split('/')[3].split('?')[0]
     s3.delete_object( Bucket=bucket_name, Key=key )
     s3.delete_object( Bucket=bucket_name, Key=key[:-4] + '.json' )
     return json.dumps({'Message': 'Success'})

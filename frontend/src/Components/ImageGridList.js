@@ -27,23 +27,20 @@ function ImageGridList() {
     const [loading, setLoading] = useState(null)
 
     useEffect(() => {
-        // const IMAGES = []
-        axios({
-            method: "GET",
-            url: 'REPLACE ME',
-        }).then(x => {
-            setIMAGES(x.data)
-        })
+        getGallery()
     }, [])
     
-    const deleteImage = () => {
-        axios({
-            method: "DELETE",
-            url: 'REPLACE ME',
-            data: { file: IMAGES[currentImage].src }
-        }).then(x => {
-            window.location.reload(false);
-        })
+    async function getGallery(){
+        const galleryURL = "REPLACE ME"
+        const result = await fetch(galleryURL)
+        const imagesArray = await result.json()
+        setIMAGES(imagesArray)
+    }
+    
+    const deleteImage = async() => {
+        const deleteURL = "REPLACE ME"
+        await fetch(deleteURL+'?fileName='+IMAGES[currentImage].src, { method: 'DELETE'})
+        window.location.reload(false);
     }
     
     const toggleDrawer = (open) => (event) => {
@@ -89,12 +86,11 @@ function ImageGridList() {
         <div>
             <Gallery images={IMAGES} onSelectImage={showDetection}
                 currentImageWillChange={onCurrentImageChange}
-
                 customControls={[
-                        <Button variant="contained" color="primary" onClick={deleteImage} startIcon={<DeleteIcon />} >
-                            Delete
-                        </Button>
-                    ]}
+                    <Button variant="contained" color="primary" onClick={deleteImage} startIcon={<DeleteIcon />} >
+                        Delete
+                    </Button>
+                ]}
             />
             <Drawer anchor={'bottom'} open={drawer} onClose={toggleDrawer(false)}>
                 <div>
