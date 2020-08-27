@@ -56,17 +56,17 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 1. Goto your AWS console via this link: https://aws.amazon.com/
 
-2. Search up <b>Cloud 9<b> in the search bar, and click on the first option.
+2. Search up **Cloud 9** in the search bar, and click on the first option.
 
-3. Click <b>Create Environment<b>
+3. Click **Create Environment**
 
-4. Set the **name** of your environment to be <b>MLWorkshop<b>.\
-   Click <b>Next Step<b>.\
-   Under <b>Instance Type<b> select <b>Other instance type<b>, and search for <b>t3.small<b> in the dropdown search.
+4. Set the **name** of your environment to be **MLWorkshop**.\
+   Click **Next Step**.\
+   Under **Instance Type** select **Other instance type**, and search for **t3.small** in the dropdown search.
 
 5. Leave everything else as default.\
-   Click <b>Next Step<b>.\
-   Click <b>Create Environment<b>.
+   Click **Next Step**.\
+   Click **Create Environment**.
 
 ### Setting up your Cloud 9 with React application
 
@@ -101,16 +101,16 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 ## Create an S3 with CORS
 
-1. From the aws console, search up <b>S3<b> in the search bar, and click on the first option.  If you can't find it click [here](https://s3.console.aws.amazon.com/s3/home?region=ap-southeast-2#)
+1. From the aws console, search up **S3** in the search bar, and click on the first option.  If you can't find it click [here](https://s3.console.aws.amazon.com/s3/home?region=ap-southeast-2#)
 
-2. Select <b>Create Bucket<b> on the s3 console.
+2. Select **Create Bucket** on the s3 console.
 
-3. Name your bucket <pre>facial-detection-<b>Replace with your full name<b><pre>
+3. Name your bucket <pre>facial-detection-<b>Replace with your full name</b></pre>
 
 
 <i>Make sure you replace with your full name where indicated above<i>
 
-4. Click <b>Create<b>
+4. Click **Create**
 
 ![Create S3](img/S3Create.png)
 
@@ -127,7 +127,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 </CORSConfiguration>
 ```
 
-5. Click <b>Save<b>
+5. Click **Save**
 
 ![CORS Image](img/cors.png)
 
@@ -135,7 +135,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 1. From the aws console, search up 'Lambda' in the search bar, and click on the first option.
 
-2. Click <b>Create function<b>
+2. Click **Create function**
 
 3. On the create function page:
 
@@ -159,7 +159,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 7. Once both polcies have been checked, click **Attach policy**
 
-8. After attaching the policy go back to your lambda and under the <b>Configuration<b> tab in the function code section, paste:
+8. After attaching the policy go back to your lambda and under the **Configuration** tab in the function code section, paste:
 
 ```python
 import boto3
@@ -328,11 +328,11 @@ bucket_name = "facial-detection-johnsmith"
 
 We now need a way to expose the lambda function to the world, we can acomplish this with API Gateway. In the AWS Console search for 'api gateway' or click [here](https://ap-southeast-2.console.aws.amazon.com/apigateway/home?region=ap-southeast-2#/apis).
 
-1. In the top right click "Create API". There will be a number of gateways to which we can choose from. We will be creating a REST API, so select "REST API" (**Note**: There are two version of REST API, don't choose the REST API private option ),  Click <b>Build<b>.
+1. In the top right click "Create API". There will be a number of gateways to which we can choose from. We will be creating a REST API, so select "REST API" (**Note**: There are two version of REST API, don't choose the REST API private option ),  Click **Build**.
 
 ![Create REST](img/restapi-1.png)
 
-2. We will be creating a new REST API, give your API a name, "rekognition" will work for this example.  Then click <b>Create API<b>
+2. We will be creating a new REST API, give your API a name, "rekognition" will work for this example.  Then click **Create API**
 
 ![Create REST](img/restapi-2.png)
 
@@ -344,7 +344,7 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 ![Create resource](img/creatresource-2.png)
 
-5. In the lambda function tex field, type in the name of the lambda function we created, **facial-detect**, and click save, when requested to confirm permission click <b>OK<b> we are allowing this API Gateway to invoke the lambda function.
+5. In the lambda function tex field, type in the name of the lambda function we created, **facial-detect**, and click save, when requested to confirm permission click **OK** we are allowing this API Gateway to invoke the lambda function.
 
 ![Create resource](img/creatresource-3.png)
  
