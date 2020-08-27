@@ -313,6 +313,8 @@ bucket_name = "facial-detection-johnsmith"
 
 ## Create and Expose API Gateway
 
+We now need a way to expose the lambda function to the world, we can acomplish this with APIGateway.  In the AWS Console serach for 'api gateway' or click [here](https://ap-southeast-2.console.aws.amazon.com/apigateway/home?region=ap-southeast-2#/apis).  In the top right click "Create API".  There are number of Gateways we can create we will select "REST API" (not don;t accidentally select the REST API private)
+
 1. Scroll to the top of the lambda to the designer. Click **Add Trigger**.
 
 2. In the trigger configuration select:
