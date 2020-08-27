@@ -108,13 +108,13 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 3. Name your bucket <pre>facial-detection-<b>Replace with your full name</b></pre>
 
 
-<i>Make sure you replace with your full name where indicated above<i>
+<i>Make sure you replace with your full name where indicated above</i>
 
 4. Click **Create**
 
 ![Create S3](img/S3Create.png)
 
-5. Goto te bucket you just created, clicking on the **Permission** tab from within the bucket. You should then see four suboptions, go to **CORS configuration** and paste the following code:
+5. Goto the bucket you just created, clicking on the **Permission** tab from within the bucket. You should then see four suboptions, go to **CORS configuration** and paste the following code:
 
 ```html
 <?xml version="1.0" encoding="UTF-8"?>
@@ -370,7 +370,7 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 npm run start
 ```
 
-<i>server might still be running if you didn't shut it down from earlier<i>
+<i>server might still be running if you didn't shut it down from earlier</i>
 
 4. After the app has compiled successfully, click **Tools** in the toolbar up top, click **Preview** and finally click **Preview Running Application**. 
    Open the preview in another tab by clicking the arrow / box button on the right of the search bar.
