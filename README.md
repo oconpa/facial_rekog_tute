@@ -101,7 +101,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 ## Create an S3 with CORS
 
-1. From the aws console, search up **S3** in the search bar, and click on the first option.  If you can't find it click [here](https://s3.console.aws.amazon.com/s3/home?region=ap-southeast-2#)
+1. From the aws console, search up **S3** in the search bar, and click on the first option. If you can't find it click [here](https://s3.console.aws.amazon.com/s3/home?region=ap-southeast-2#)
 
 2. Select **Create Bucket** on the s3 console.
 
@@ -133,7 +133,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 ## Create the lambda (backend)
 
-1. From the aws console, search up 'Lambda' in the search bar, and click on the first option.
+1. From the aws console, search up **Lambda** in the search bar, and click on the first option. If you can't find it click [here](https://ap-southeast-2.console.aws.amazon.com/lambda/home?region=ap-southeast-2#/functions)
 
 2. Click **Create function**
 
