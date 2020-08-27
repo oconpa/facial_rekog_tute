@@ -97,7 +97,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 ## Create an S3 + CORS
 
-1. From the aws console, search up 'S3' in the search bar, and click on the first option.
+1. From the aws console, search up 'S3' in the search bar, and click on the first option.  If you can't find it click [here](https://s3.console.aws.amazon.com/s3/home?region=ap-southeast-2#)
 
 2. Click 'Create Bucket'
 
@@ -152,171 +152,155 @@ Image
 import boto3
 import json
 
-client = boto3.client('rekognition')
+rekognition = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-REPLACEME"
+bucket_name = "facial-detection-paulkukiel"
 expiration = 120
 
-
 def lambda_handler(event, context):
-    print(event)
-    if (event['path'] == '/upload'):
-        response = s3.generate_presigned_url(
-                    'put_object',
+    #print(event)
+    path = event['path']
+    body = ''
+    if (path == '/upload'):
+        body = doUpload(event)
+    elif (path == '/detect'):
+        body = doFacialDetection(event)
+    elif (path == '/delete'):
+        body = doDelete(event)
+    elif (path == '/listgallery'):
+        body = doListGallery(event)
+    elif (path == '/charts'):
+        body = doChart(event)
+    
+    return {
+            'statusCode': 200,
+            'headers': {
+                "access-control-allow-origin": "*"
+            },
+            'body': body
+    }
+    
+
+# Upload method
+def doUpload(event):
+    response = s3.generate_presigned_url(
+        'put_object',
+        Params={
+            'Bucket': bucket_name,
+            'Key': event['queryStringParameters']['fileName'],
+            'ContentType': 'multipart/form-data'
+        },
+        ExpiresIn=expiration)
+        
+    body = json.dumps(response)
+    return body
+
+#Use AWS Rekognition to detect faces in images in S3
+def doFacialDetection(event):
+    response = rekognition.detect_faces(
+        Image={
+            'S3Object': {
+                'Bucket': bucket_name,
+                'Name': event['body'],
+            }
+        },
+        Attributes=['ALL']
+    )
+    
+    s3.put_object(
+        Body=(bytes(json.dumps(response).encode('UTF-8'))),
+        Bucket=bucket_name,
+        Key=str(event['body'][:-4]) + '.json',
+    )
+    return json.dumps(response)
+
+# Retunr a list of all images to display in a agllery
+def doListGallery(event):
+    response = s3.list_objects_v2(Bucket=bucket_name)
+
+    for i in range(len(response['Contents'])-1, -1, -1):
+        if 'LastModified' in response['Contents'][i]:
+            del response['Contents'][i]['LastModified']
+        if response['Contents'][i]['Key'][-5:] == '.json':
+            response['Contents'].pop(i)
+
+    alist = []
+    for j in response['Contents']:
+        link = s3.generate_presigned_url(
+                    'get_object',
                     Params={
                         'Bucket': bucket_name,
-                        'Key': event['queryStringParameters']['fileName'],
-                        'ContentType': 'multipart/form-data'
+                        'Key': j['Key'],
                     },
                     ExpiresIn=expiration)
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps(response)
-        }
-    elif (event['path'] == '/detect'):
-        response = client.detect_faces(
-            Image={
-                'S3Object': {
-                    'Bucket': bucket_name,
-                    'Name': event['body'],
-                }
-            },
-            Attributes=['ALL']
-        )
-        
-        s3.put_object(
-            Body=(bytes(json.dumps(response).encode('UTF-8'))),
-            Bucket=bucket_name,
-            Key=str(event['body'][:-4]) + '.json',
-        )
+        alist.append({'src': link, 'thumbnail': link})
 
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps(response)
-        }
-    elif (event['path'] == '/delete'):
-        data = json.loads(event['body'])
-        key = data['file'].split('/')[3].split('?')[0]
-        s3.delete_object(
-                Bucket=bucket_name,
-                Key=key
-            )
-        s3.delete_object(
-                Bucket=bucket_name,
-                Key=key[:-4] + '.json'
-            )
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps({'Message': 'Success'})
-        }
-    elif (event['path'] == '/listgallery'):
+    return json.dumps(alist)
+
+
+def doChart(event):
+    if (event['body'] == 'age'):
+        response = s3.list_objects_v2( Bucket=bucket_name)
+        
+        alist = []
+        for item in response['Contents']:
+            if (item['Key'][-5:] == '.json'):
+                resp = s3.get_object(
+                    Bucket=bucket_name,
+                    Key=item['Key']
+                )
+                alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+        
+        chart = [0, 0, 0, 0, 0, 0]
+        for i in alist:
+            if len(i['FaceDetails']) != 0:
+                for j in i['FaceDetails']:
+                    age = (j['AgeRange']['Low'] + j['AgeRange']['High'])/2
+                    if age > 89:
+                        chart[5] += 1
+                    elif age > 69:
+                        chart[4] += 1
+                    elif age > 49:
+                        chart[3] += 1
+                    elif age > 39:
+                        chart[2] += 1
+                    elif age > 19:
+                        chart[1] += 1
+                    elif age >= 0:
+                        chart[0] += 1
+
+    elif (event['body'] == 'smile'):
         response = s3.list_objects_v2(
             Bucket=bucket_name
-            )
-
-        for i in range(len(response['Contents'])-1, -1, -1):
-            if 'LastModified' in response['Contents'][i]:
-                del response['Contents'][i]['LastModified']
-            if response['Contents'][i]['Key'][-5:] == '.json':
-                response['Contents'].pop(i)
-
+        )
+        
         alist = []
-        for j in response['Contents']:
-            link = s3.generate_presigned_url(
-                        'get_object',
-                        Params={
-                            'Bucket': bucket_name,
-                            'Key': j['Key'],
-                        },
-                        ExpiresIn=expiration)
-            alist.append({'src': link, 'thumbnail': link})
+        for item in response['Contents']:
+            if (item['Key'][-5:] == '.json'):
+                resp = s3.get_object(
+                    Bucket=bucket_name,
+                    Key=item['Key']
+                )
+                alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+        
+        chart = [0, 0]
+        for i in alist:
+            if len(i['FaceDetails']) != 0:
+                for j in i['FaceDetails']:
+                    if j['Smile']['Value']:
+                        chart[0] += 1
+                    else:
+                        chart[1] += 1
 
-        return {
-            'statusCode': 200,
-            'headers': {
-                "access-control-allow-origin": "*"
-            },
-            'body': json.dumps(alist)
-        }
-    elif (event['path'] == '/charts'):
-        if (event['body'] == 'age'):
-            response = s3.list_objects_v2(
-                Bucket=bucket_name
-            )
-            
-            alist = []
-            for item in response['Contents']:
-                if (item['Key'][-5:] == '.json'):
-                    resp = s3.get_object(
-                        Bucket=bucket_name,
-                        Key=item['Key']
-                    )
-                    alist.append(json.loads(resp['Body'].read().decode('utf-8')))
-            
-            chart = [0, 0, 0, 0, 0, 0]
-            for i in alist:
-                if len(i['FaceDetails']) != 0:
-                    for j in i['FaceDetails']:
-                        age = (j['AgeRange']['Low'] + j['AgeRange']['High'])/2
-                        if age > 89:
-                            chart[5] += 1
-                        elif age > 69:
-                            chart[4] += 1
-                        elif age > 49:
-                            chart[3] += 1
-                        elif age > 39:
-                            chart[2] += 1
-                        elif age > 19:
-                            chart[1] += 1
-                        elif age >= 0:
-                            chart[0] += 1
-
-            return {
-                'statusCode': 200,
-                'headers': {
-                    "access-control-allow-origin": "*"
-                },
-                'body': json.dumps(chart)
-            }
-        elif (event['body'] == 'smile'):
-            response = s3.list_objects_v2(
-                Bucket=bucket_name
-            )
-            
-            alist = []
-            for item in response['Contents']:
-                if (item['Key'][-5:] == '.json'):
-                    resp = s3.get_object(
-                        Bucket=bucket_name,
-                        Key=item['Key']
-                    )
-                    alist.append(json.loads(resp['Body'].read().decode('utf-8')))
-            
-            chart = [0, 0]
-            for i in alist:
-                if len(i['FaceDetails']) != 0:
-                    for j in i['FaceDetails']:
-                        if j['Smile']['Value']:
-                            chart[0] += 1
-                        else:
-                            chart[1] += 1
-
-            return {
-                'statusCode': 200,
-                'headers': {
-                    "access-control-allow-origin": "*"
-                },
-                'body': json.dumps(chart)
-            }
+        return json.dumps(chart)
+    
+# Delete Method
+def doDelete(event):
+    data = json.loads(event['body'])
+    key = data['file'].split('/')[3].split('?')[0]
+    s3.delete_object( Bucket=bucket_name, Key=key )
+    s3.delete_object( Bucket=bucket_name, Key=key[:-4] + '.json' )
+    return json.dumps({'Message': 'Success'})
 ```
 
 9. On line 6 you will need to replace 'REPLACEME' with the bucket you created earlier on. E.g. if you named your bucket facial-detection-johnsmith, then line 6 would look like
