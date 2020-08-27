@@ -38,7 +38,7 @@ function MyDropzone() {
 
     async function uploadFile() {
     setLoading(true)
-    let response = await axios("REPLACEME?fileName=" + uuid);
+    let response = await axios("https://zs9po1kl31.execute-api.ap-southeast-2.amazonaws.com/default/upload?fileName=" + uuid);
     const url = await response.data;
     
     await axios({
