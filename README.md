@@ -139,10 +139,10 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 3. On the create function page:
 
-```
-- Name your function **facial-detect**
-- Set your runtime to **Python 3.8**
-```
+<pre>
+- Name your function <b>facial-detect</b>
+- Set your runtime to <b>Python 3.8</b>
+</pre>
 
 4. Click **Create function**
 
