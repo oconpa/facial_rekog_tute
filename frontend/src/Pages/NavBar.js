@@ -11,7 +11,7 @@ const NavBar = () => {
             <Toolbar>
                 <DrawerStep />
                 <Typography variant="subtitle1" color="inherit">
-                Mechine Learning (AI) Face Recogontion Web App
+                Machine Learning (AI) Face Recogontion Web App
                 </Typography>
             </Toolbar>
         </AppBar>

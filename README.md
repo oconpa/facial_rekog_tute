@@ -167,7 +167,7 @@ import json
 
 rekognition = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-REPLACEME"
+bucket_name = "facial-detection-patrickoconnor"
 expiration = 120
 
 def lambda_handler(event, context):
@@ -224,7 +224,7 @@ def doFacialDetection(event):
     s3.put_object(
         Body=(bytes(json.dumps(response).encode('UTF-8'))),
         Bucket=bucket_name,
-        Key=str(event['body'][:-4]) + '.json',
+        Key=str(event['body']) + '.json',
     )
     return json.dumps(response)
 
@@ -312,7 +312,7 @@ def doDelete(event):
     # get the second item on the URL, the item we want to remove from S3
     key = event['path'].split("/")[2]
     s3.delete_object( Bucket=bucket_name, Key=key )
-    s3.delete_object( Bucket=bucket_name, Key=key[:-4] + '.json' )
+    s3.delete_object( Bucket=bucket_name, Key=key + '.json' )
     return json.dumps({'Message': 'Success'})
 ```
 
@@ -415,7 +415,7 @@ The gallery detection feature will allow user from the gallery to perform detect
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/Charts.js, on line 8 substitute 'REPLACE ME' with the invoke URL.
+2. In frontend/src/Components/Charts.js, on line 7 substitute 'REPLACE ME' with the invoke URL.
 
 3. Test the app. To test the charts feature, goto the gallery page. If you have some images in the gallery the charts at the bottom should be populated with smile and age metrics. For example if you upload a 20 year old person smilling then you should have one unit for smilling and one unit for 20-39 year old on the charts.
 
