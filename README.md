@@ -344,7 +344,7 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 ![Create resource](img/creatresource-2.png)
 
-5. In the lambda function tex field, type in the name of the lambda function we created, **facial-detect**, and click save, when requested to confirm permission click **OK** we are allowing this API Gateway to invoke the lambda function.
+5. In the lambda function text field, type in the name of the lambda function we created, **facial-detect**, and click save, when requested to confirm permission click **OK** we are allowing this API Gateway to invoke the lambda function.
 
 ![Create resource](img/creatresource-3.png)
  
