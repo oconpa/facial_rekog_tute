@@ -10,7 +10,7 @@ const NavBar = () => {
         <AppBar position="static">
             <Toolbar>
                 <DrawerStep />
-                <Typography variant="title" color="inherit">
+                <Typography variant="subtitle1" color="inherit">
                 Mechine Learning (AI) Face Recogontion Web App
                 </Typography>
             </Toolbar>

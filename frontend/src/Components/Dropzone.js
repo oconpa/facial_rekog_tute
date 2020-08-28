@@ -61,8 +61,8 @@ function MyDropzone() {
     addToast('Saved To Gallery', { appearance: 'success', autoDismiss: true })
     setImage(false)
     setLoading(false)
-}
-
+  }
+  
   return (
     <div>
       { loading ? 
