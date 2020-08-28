@@ -30,7 +30,7 @@ function ImageGridList() {
     }, [])
     
     async function getGallery(){
-        const galleryURL = "https://bygnhzfia5.execute-api.ap-southeast-2.amazonaws.com/default/listgallery"
+        const galleryURL = "REPLACE ME"
         const res = await fetch(galleryURL)
         const data = await res.json()
         setIMAGES(data)
