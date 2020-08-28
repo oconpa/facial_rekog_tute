@@ -30,7 +30,8 @@ function ImageGridList() {
     }, [])
     
     async function getGallery(){
-        const galleryURL = "REPLACE ME"
+        const apiURL = 'REPLACE ME'
+        const galleryURL = `${apiURL}/listgallery`
         const res = await fetch(galleryURL)
         const data = await res.json()
         setIMAGES(data)

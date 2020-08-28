@@ -24,13 +24,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleAccordion(props) {
   const classes = useStyles();
+  const expanded = true
 
   return (
       props.data ?
-    <div className={classes.root}>
+    <div className={classes.root} >
      {props.data.map((element, index) => {
          return (
-           <Accordion defaultExpanded='true'>
+           <Accordion defaultExpanded={expanded} key={index}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -48,39 +49,39 @@ export default function SimpleAccordion(props) {
                     <li>Top: {element.BoundingBox.Top}</li>
                     <li>Width: {element.BoundingBox.Width}</li>
                 { (element.Emotions.length > 0) ?
-                    <p>
+                    <>
                     Emotion:
                         <li>Type: {element.Emotions[0].Type}</li>
                         <li>Confidence: {element.Emotions[0].Confidence}</li>
-                    </p>
+                    </>
                     :
                     null
                 }
-                <p>
+                <>
                 Smile: 
                     <li>{element.Smile.Value.toString()}</li>
                     <li>Confidence: {element.Smile.Confidence}</li>
-                </p>
-                <p>
+                </>
+                <>
                 MouthOpen: 
                     <li>{element.MouthOpen.Value.toString()}</li>
                     <li>Confidence: {element.MouthOpen.Confidence}</li>
-                </p>
-                <p>
+                </>
+                <>
                 Mustache: 
                     <li>{element.Mustache.Value.toString()}</li>
                     <li>Confidence: {element.Mustache.Confidence}</li>
-                </p>
-                <p>
+                </>
+                <>
                 EyesOpen:
                     <li>{element.EyesOpen.Value.toString()}</li>
                     <li>Confidence: {element.EyesOpen.Confidence}</li>
-                </p>
-                <p>
+                </>
+                <>
                 Sunglasses: 
                     <li>{element.Sunglasses.Value.toString()}</li>
                     <li>Confidence: {element.Sunglasses.Confidence}</li>
-                </p>
+                </>
               </Typography>
             </AccordionDetails>
            </Accordion>
