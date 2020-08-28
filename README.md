@@ -167,7 +167,7 @@ import json
 
 rekognition = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-paulkukiel"
+bucket_name = "facial-detection-REPLACEME"
 expiration = 120
 
 def lambda_handler(event, context):
