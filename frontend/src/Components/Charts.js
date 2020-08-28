@@ -5,17 +5,23 @@ import axios from "axios";
 function Chart() {
     const [age, setAge] = useState([0, 0, 0, 0, 0, 0])
     const [smile, setSmile] = useState([0, 0])
+    const apiURL = 'REPLACE ME'
 
-    useEffect(() => {
-        axios({
-            method: "POST",
-            url: 'REPLACE ME',
-            data: 'age',
-        }).then(res => {
+    async function getCharts(type) {
+        const chartURL = `${apiURL}/charts`
+
+        const chartResult = await fetch(chartURL,
+            {
+                method: "POST",
+                data: type
+            })
+        const detectionData = await chartResult.json()
+        switch(type) {
+        case 'age':
             setAge({
                 labels: ['0-19', '20-39', '40-49', '50-69', '70-89', '90+'],
                 datasets: [{
-                    data: res.data,
+                    data: detectionData.data,
                     label: '# per Age Range',
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -36,17 +42,12 @@ function Chart() {
                     borderWidth: 1
                 }]
             })
-        })
-
-        axios({
-            method: "POST",
-            url: 'REPLACE ME',
-            data: 'smile',
-        }).then(res => {
+            break
+        case 'smile':
             setSmile({
                 labels: ['Smiles', 'No Smiles'],
                 datasets: [{
-                    data: res.data,
+                    data: detectionData.data,
                     label: '# of Smiles',
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -59,7 +60,14 @@ function Chart() {
                     borderWidth: 1
                 }]
             })
-        })
+            break
+        default:
+            break
+    }
+
+    useEffect(() => {
+        getCharts('age')
+        getCharts('smile')
     }, [])
     
     return (

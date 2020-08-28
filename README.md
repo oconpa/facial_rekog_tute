@@ -171,7 +171,7 @@ bucket_name = "facial-detection-REPLACEME"
 expiration = 120
 
 def lambda_handler(event, context):
-    #print(event)
+    print(event)
     path = event['path'].split("/")[1]
     body = ''
     if (path == 'upload'):
@@ -352,19 +352,13 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 ![Deploy](img/stage.png)
 
-7. You will see a **Invoke URL** copy this, you will need it in the front end app. This is the http endpoint, effectively the entry point to our lambda function from the world.
+7. You will see an **Invoke URL** copy this, you will need it in the front end app. This is the http endpoint, effectively the entry point to our lambda function from the world.
 
 ## Connecting the React Frontend to the Upload Route Backend
 
-1. Navigate back to your cloud 9. On line 41 of frontend/src/Components/Dropzone.js you will substitute **REPLACE ME** with the API link you copied from API Gateway. 
+1. Navigate back to your cloud 9. On line 37 of frontend/src/Components/Dropzone.js you will substitute **REPLACE ME** with the **Invoke URL** you copied from API Gateway. 
 
-2. With invoke url now in the code, it's time to give the approriate extension. Extensions direct what code on the backend should execute and what results should be returned. We will add **/upload?fileName=** to the url which should then make your line look similar to this, but with your unique API link:
-
-```javascript
-"https://dhggdsdv6f.execute-api.ap-southeast-2.amazonaws.com/default/upload?fileName=" +
-```
-
-3. Great work, you've know finished your first feature for your ML website. To test whether the functionality works we will try upload an image from the website. To do this we will need to kick off a local version of the site with the following code.
+2. Great work, you've know finished your first page of features for your ML website. To test whether the functionality works we will try upload an image from the website. To do this we will need to kick off a local version of the site with the following code.
 
 ```shell
 npm run start
@@ -372,14 +366,14 @@ npm run start
 
 <i>server might still be running if you didn't shut it down from earlier</i>
 
-4. After the app has compiled successfully, click **Tools** in the toolbar up top, click **Preview** and finally click **Preview Running Application**. 
+3. After the app has compiled successfully, click **Tools** in the toolbar up top, click **Preview** and finally click **Preview Running Application**. 
    Open the preview in another tab by clicking the arrow / box button on the right of the search bar.
 
-5. In the app, you will need to navigate to the upload page by opening up the left drawer menu. Once on the page, try uploading an image using the upload interface; preferably a facial image, to test whether your /upload route works. Make sure to click **Scan**.
+4. In the app, you will need to navigate to the upload page by opening up the left drawer menu. Once on the page, try uploading an image using the upload interface; preferably a facial image, to test whether your /upload and /detect routes work. Make sure to click **Scan**.
 
-6. The webpage should hang as your missing the final piece, however to test whether the /upload route has worked you can go to your s3 bucket. If you've correctly followed the previous steps you should now see a file in the bucket. You can open and inspect it to confirm it is in fact the image you uploaded.
+5. If you've correctly followed the previous steps and all goes well, the site should save your image to the s3 with a json of detections and render the results, if their is at least one facial detection on the site.
 
-## Detection Time
+## Gallery Time
 
 Congradulations on getting this far in the workshop. As promised this section is your opportunity to reap on some AWS credits. In this workshop we have 4 challenges for you to try out. Each challenge relates to one functionality in the ML React App. Your job is to successfully connect the backend routes (lambda) through api to the web application and have the app run successfully.
 
@@ -387,31 +381,13 @@ For reference as you complete the challenges your app should run similar to http
 
 Good luck, remember the faster you complete the challenges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
 
-#### Connect detect to React Frontend
-
-For this challenge we would like to connect the machine learning capabilities of Rekognition to your application. To do this, we must add some apis to your frontend.
-
-1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
-
-2. In frontend/src/Components/Dropzone.js, on line 53 substitute 'REPLACE ME' with the invoke URL along with the /detect extension. The added url should look similar to this, but with your unique API link:
-
-```javascript
-"https://dhggdsdv6f.execute-api.ap-southeast-2.amazonaws.com/default/detect"
-```
-
-3. Test the app. To test the detect feature goto the upload page. Upload an image and then click **Scan**. If the route has worked, after scanning an image you should get in return a scan or no scan response on your webpage (the page should not continually load).
-
 #### Connect listgallery to React Frontend
 
-This route fuels fetch for image to populate your gallery page. It will pull images from your s3 and serve them up for users to view.
+This route will pull the existing images from your s3 to populate your gallery page. It pulls and serves them up for the users to view.
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/Dropzone.js, on line 53 substitute 'REPLACE ME' with the invoke URL along with the /listgallery extension. The added url should look similar to this, but with your unique API link:
-
-```javascript
-"https://dhggdsdv6f.execute-api.ap-southeast-2.amazonaws.com/default/listgallery"
-```
+2. In frontend/src/Components/ImageGridList.js, on line 33 substitute 'REPLACE ME' with the invoke URL
 
 3. Test the app. To test the listgallery feature goto the gallery page. If successful the images you uploaded via the upload page should now be rendering on the gallery page.
 
@@ -421,23 +397,25 @@ The delete feature will allow user from the webpage to delete and remove images 
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/ImageGridList.js, on line 41 substitute 'REPLACE ME' with the invoke URL along with the /delete extension. The added url should look similar to this, but with your unique API link:
-
-```javascript
-"https://dhggdsdv6f.execute-api.ap-southeast-2.amazonaws.com/default/delete"
-```
+2. In frontend/src/Components/ImageGridList.js, on line 43 substitute 'REPLACE ME' with the invoke URL.
 
 3. Test the app. To test the delete feature goto the gallery page. If you select one of the images, there should be an option to delete. If successful, when you select the button after the page has refreshed the image should now be gone.
+
+#### Connect gallery detection to React Frontend
+
+The gallery detection feature will allow user from the gallery to perform detections on previous image by pressing the tick icon on the top left of each image.
+
+1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
+
+2. In frontend/src/Components/ImageGridList.js, on line 58 substitute 'REPLACE ME' with the invoke URL.
+
+3. Test the app. To test the gallery detection goto the gallery page. On the top left of each image should be a tick icon. If you click it, if all things go well you should get back detection for the image.
 
 #### Connect charts to React Frontend
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/Charts.js, on line 12 substitute 'REPLACE ME' with the invoke URL along with the /charts extension. The added url should look similar to this, but with your unique API link:
-
-```javascript
-"https://dhggdsdv6f.execute-api.ap-southeast-2.amazonaws.com/default/charts"
-```
+2. In frontend/src/Components/Charts.js, on line 8 substitute 'REPLACE ME' with the invoke URL.
 
 3. Test the app. To test the charts feature, goto the gallery page. If you have some images in the gallery the charts at the bottom should be populated with smile and age metrics. For example if you upload a 20 year old person smilling then you should have one unit for smilling and one unit for 20-39 year old on the charts.
 
