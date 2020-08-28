@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Gallery from 'react-grid-gallery';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
-import axios from "axios";
 import Drawer from '@material-ui/core/Drawer';
 import SimpleAccordion from '../Components/Acordion'
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -32,41 +31,44 @@ function ImageGridList() {
     
     async function getGallery(){
         const galleryURL = "REPLACE ME"
-        const result = await fetch(galleryURL)
-        const imagesArray = await result.json()
-        setIMAGES(imagesArray)
+        const res = await fetch(galleryURL)
+        const data = await res.json()
+        setIMAGES(data)
     }
     
     const deleteImage = async() => {
-        const deleteURL = "REPLACE ME"
-        await fetch(deleteURL+'?fileName='+IMAGES[currentImage].src, { method: 'DELETE'})
+        //Extract the image ID for deletion
+        const imageId = IMAGES[currentImage].src.split("=")[0].split("/")[3].split("?")[0]
+        const apiURL = 'REPLACE ME'
+        const deleteURL = `${apiURL}/delete/${imageId}`
+        
+        await fetch(deleteURL, { method: 'DELETE'})
+        
         window.location.reload(false);
     }
     
     const toggleDrawer = (open) => (event) => {
-        console.log(open)
-        console.log(event)
         setDrawer(open);
     };
 
-    const showDetection = (event) => {
+    const showDetection = async(event) => {
         setLoading(true)
-        axios({
-            method: "POST",
-            url: 'REPLACE ME',
-            data: IMAGES[event].src.split('/')[3].split('?')[0],
-        })
-        .then(res => {
-            console.log(res)
-            // setImage(false)
-            if (res.data.FaceDetails.length === 0) {
-                setScan(null)
-            } else {
-                setScan(res.data.FaceDetails)
-            }
-            setLoading(false)
-        })
-        setDrawer(true);
+        
+        const apiURL = 'REPLACE ME'
+        const detectURL = `${apiURL}/detect`
+        const imageId = IMAGES[event].src.split('/')[3].split('?')[0]
+        
+        const res = await fetch(detectURL, { method: 'POST', body: imageId })
+        const data = await res.json()
+        
+        if (data.FaceDetails.length) {
+            setScan(data.FaceDetails) 
+        }else{
+            setScan(null)
+        }
+        
+        setLoading(false)
+        setDrawer(true)
     }
     
     const onCurrentImageChange = (index) => {
@@ -84,7 +86,8 @@ function ImageGridList() {
 
     return (
         <div>
-            <Gallery images={IMAGES} onSelectImage={showDetection}
+            <Gallery images={IMAGES} 
+                onSelectImage={showDetection}
                 currentImageWillChange={onCurrentImageChange}
                 customControls={[
                     <Button variant="contained" color="primary" onClick={deleteImage} startIcon={<DeleteIcon />} >

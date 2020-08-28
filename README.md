@@ -172,17 +172,17 @@ expiration = 120
 
 def lambda_handler(event, context):
     #print(event)
-    path = event['path']
+    path = event['path'].split("/")[1]
     body = ''
-    if (path == '/upload'):
+    if (path == 'upload'):
         body = doUpload(event)
-    elif (path == '/detect'):
+    elif (path == 'detect'):
         body = doFacialDetection(event)
-    elif (path == '/delete'):
+    elif (path == 'delete'):
         body = doDelete(event)
-    elif (path == '/listgallery'):
+    elif (path == 'listgallery'):
         body = doListGallery(event)
-    elif (path == '/charts'):
+    elif (path == 'charts'):
         body = doChart(event)
     
     return {
@@ -190,7 +190,6 @@ def lambda_handler(event, context):
             'headers': {
                 "access-control-allow-origin": "*",
                 "access-control-allow-methods": "*"
-                
             },
             'body': body
     }
@@ -281,6 +280,7 @@ def doChart(event):
                         chart[1] += 1
                     elif age >= 0:
                         chart[0] += 1
+        return json.dumps(chart)
 
     elif (event['body'] == 'smile'):
         response = s3.list_objects_v2(
@@ -309,8 +309,8 @@ def doChart(event):
     
 # Delete Method
 def doDelete(event):
-    data = event['queryStringParameters']['fileName']
-    key = data.split('/')[3].split('?')[0]
+    # get the second item on the URL, the item we want to remove from S3
+    key = event['path'].split("/")[2]
     s3.delete_object( Bucket=bucket_name, Key=key )
     s3.delete_object( Bucket=bucket_name, Key=key[:-4] + '.json' )
     return json.dumps({'Message': 'Success'})
