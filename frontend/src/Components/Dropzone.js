@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Button from '@material-ui/core/Button';
-import axios from "axios";
 import ImageUploader from 'react-images-upload';
 import SimpleAccordion from '../Components/Acordion'
 import { useToasts } from 'react-toast-notifications'
@@ -28,73 +27,40 @@ function MyDropzone() {
 
   const onDrop = (event) => {
     setUuid(short.generate())
-    console.log(event[0])
     setPictures(event)
     setImage(true)
-    if (pictures.length > 0) {
-      console.log(uuid)
-    }
   }
 
-    async function uploadFile() {
+  const uploadFile = async() => {
     setLoading(true)
-    let response = await axios("https://zs9po1kl31.execute-api.ap-southeast-2.amazonaws.com/default/upload?fileName=" + uuid);
-    const url = await response.data;
     
-    await axios({
-            method: "PUT",
-            url: url,
-            data: pictures[0],
-            headers: { "Content-Type": "multipart/form-data" }
-          });
+    const apiURL = 'REPLACE ME'
     
-    response = await axios({
-            method: "POST",
-            url: 'REPLACE ME',
-            data: uuid,
-          })
-
-    console.log(response.data.FaceDetails)
-    setImage(false)
-    setScan(response.data.FaceDetails)
+    // Request a presigned URL that will enable us to securly PUT to S3
+    const uploadURL = `${apiURL}/upload/?fileName=${uuid}`
+    const res = await fetch(uploadURL)
+    const url = await res.json()
+    
+    // PUT the file directly to S3
+    await fetch(url, {
+                        method: 'put',
+                        body: pictures[0],
+                        headers: new Headers({
+                          'Content-Type': 'multipart/form-data'
+                        })
+                      })
+    
+    const detectURL = `${apiURL}/detect`
+    
+    // Invoke Detection on the new file
+    const detectionResult = await fetch(detectURL, { method: 'POST', body: uuid })
+    const detectionData = await detectionResult.json()
+    
+    // Populate Data from response into accordian.
+    setScan(detectionData.FaceDetails)
     addToast('Saved To Gallery', { appearance: 'success', autoDismiss: true })
+    setImage(false)
     setLoading(false)
-            
-    // axios(
-    //   "REPLACE ME" + "?fileName=" +
-    //         uuid
-    // ).then(response => {
-        // Getting the url from response
-        // console.log(response)
-        // const url = response.data;
-
-        // Initiating the PUT request to upload file  
-        // console.log(pictures[0])
-        // axios({
-        //     method: "PUT",
-        //     url: url,
-        //     data: pictures[0],
-        //     headers: { "Content-Type": "multipart/form-data" }
-        // })
-            // .then(res => {
-            //   axios({
-            //     method: "POST",
-            //     url: 'REPLACE ME',
-            //     data: uuid,
-            //   })
-            //   .then(res => {
-            //     console.log(res.data.FaceDetails)
-            //     setImage(false)
-            //     setScan(res.data.FaceDetails)
-            //     addToast('Saved To Gallery', { appearance: 'success', autoDismiss: true })
-            //     setLoading(false)
-            //   })
-            //   .catch(err => {
-            //     addToast(err, { appearance: 'error', autoDismiss: true })
-            //     console.log(err)
-            //   });
-            // })
-    // });
 }
 
   return (
