@@ -34,7 +34,7 @@ function MyDropzone() {
   const uploadFile = async() => {
     setLoading(true)
 
-    const apiURL = 'REPLACE ME'
+    const apiURL = 'https://gjlen5omy9.execute-api.ap-southeast-2.amazonaws.com/default'
 
     // Request a presigned URL that will enable us to securly PUT to S3
     const uploadURL = `${apiURL}/upload/?fileName=${uuid}`

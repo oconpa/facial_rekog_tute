@@ -358,7 +358,7 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 1. Navigate back to your cloud 9. On line 37 of frontend/src/Components/Dropzone.js you will substitute **REPLACE ME** with the **Invoke URL** you copied from API Gateway. 
 
-2. Great work, you've know finished your first page of features for your ML website. To test whether the functionality works we will try upload an image from the website. To do this we will need to kick off a local version of the site with the following code.
+2. Great work, you've now finished your first page of features for your ML website. To test whether the functionality works we will try upload an image from the website. To do this we will need to kick off a local version of the site with the following code.
 
 ```shell
 npm run start
