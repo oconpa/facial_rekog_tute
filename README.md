@@ -437,4 +437,6 @@ The gallery detection feature will allow user from the gallery to perform detect
 
 3. Test the app. To test the charts feature, goto the gallery page. If you have some images in the gallery the charts at the bottom should be populated with smile and age metrics. For example if you upload a 20 year old person smilling then you should have one unit for smilling and one unit for 20-39 year old on the charts.
 
+## AWSome you made it!!
+
 And that's it you've made it to the end. Let your trainer know so your in the running to get some AWS credits. Don't forget to complete the survey and join the AWS facebook group to keep up with all things AWS.
