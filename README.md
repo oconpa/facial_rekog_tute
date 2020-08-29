@@ -231,13 +231,13 @@ def doFacialDetection(event):
 def doListGallery(event):
     response = s3.list_objects_v2(Bucket=bucket_name)
 
-    for i in range(len(response['Contents'])-1, -1, -1):
-        if 'LastModified' in response['Contents'][i]:
-            del response['Contents'][i]['LastModified']
-        if response['Contents'][i]['Key'][-5:] == '.json':
-            response['Contents'].pop(i)
+    for s3itemIndex in range(len(response['Contents'])-1, -1, -1):
+        if 'LastModified' in response['Contents'][s3itemIndex]:
+            del response['Contents'][s3itemIndex]['LastModified']
+        if response['Contents'][s3itemIndex]['Key'][-5:] == '.json':
+            response['Contents'].pop(s3itemIndex)
 
-    alist = []
+    photoList = []
     for j in response['Contents']:
         link = s3.generate_presigned_url(
                     'get_object',
@@ -246,28 +246,30 @@ def doListGallery(event):
                         'Key': j['Key'],
                     },
                     ExpiresIn=expiration)
-        alist.append({'src': link, 'thumbnail': link})
+        photoList.append({'src': link, 'thumbnail': link})
 
-    return json.dumps(alist)
+    return json.dumps(photoList)
 
 def doChart(event):
     if (event['body'] == 'age'):
         response = s3.list_objects_v2( Bucket=bucket_name)
         
-        alist = []
+        photoList = []
+        # We are looping to get all json information on each image
         for item in response['Contents']:
             if (item['Key'][-5:] == '.json'):
                 resp = s3.get_object(
                     Bucket=bucket_name,
                     Key=item['Key']
                 )
-                alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+                photoList.append(json.loads(resp['Body'].read().decode('utf-8')))
         
         chart = [0, 0, 0, 0, 0, 0]
-        for i in alist:
-            if len(i['FaceDetails']) != 0:
-                for j in i['FaceDetails']:
-                    age = (j['AgeRange']['Low'] + j['AgeRange']['High'])/2
+        # We are looping through each face to pull average age
+        for photo in photoList:
+            if len(photo['FaceDetails']) != 0:
+                for face in photo['FaceDetails']:
+                    age = (face['AgeRange']['Low'] + face['AgeRange']['High'])/2
                     if age > 89:
                         chart[5] += 1
                     elif age > 69:
@@ -280,27 +282,28 @@ def doChart(event):
                         chart[1] += 1
                     elif age >= 0:
                         chart[0] += 1
-        return json.dumps(chart)
 
     elif (event['body'] == 'smile'):
         response = s3.list_objects_v2(
             Bucket=bucket_name
         )
         
-        alist = []
+        photoList = []
+        # We are looping to get all json information on each image
         for item in response['Contents']:
             if (item['Key'][-5:] == '.json'):
                 resp = s3.get_object(
                     Bucket=bucket_name,
                     Key=item['Key']
                 )
-                alist.append(json.loads(resp['Body'].read().decode('utf-8')))
+                photoList.append(json.loads(resp['Body'].read().decode('utf-8')))
         
         chart = [0, 0]
-        for i in alist:
-            if len(i['FaceDetails']) != 0:
-                for j in i['FaceDetails']:
-                    if j['Smile']['Value']:
+        # We are looping through each face to see if it's a smile or not
+        for photo in photoList:
+            if len(photo['FaceDetails']) != 0:
+                for face in photo['FaceDetails']:
+                    if face['Smile']['Value']:
                         chart[0] += 1
                     else:
                         chart[1] += 1
@@ -367,7 +370,7 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 2. Great work, you've now finished your first page of features for your ML website. To test whether the functionality works we will try upload an image from the website. To do this we will need to kick off a local version of the site with the following code.
 
-<i>Only run this if you're the process running in your terminal has stopped, it should still be running from before.</i>
+<i>Only run this if the process running in your terminal has stopped, it should still be running from before.</i>
 
 ```shell
 npm run start
@@ -382,13 +385,17 @@ npm run start
 
 6. If you've correctly followed the previous steps and all goes well, the site should save your image to the s3 with a json of detections and render the results, if their is at least one facial detection on the site.
 
+<b>Note: </b><i>The results should return in a few seconds, if you're waiting for a while and it has not given you back a notification make sure to clear your browsers cache, as this can sometimes interfere. You can do this by going to your browsers history option, select advance clearing and clear history</i>
+
 ## Gallery Time
 
-Congradulations on getting this far in the workshop. As promised this section is your opportunity to reap on some AWS credits. In this workshop we have 4 challenges for you to try out. Each challenge relates to one functionality in the ML React App. Your job is to successfully connect the backend routes (lambda) through api to the web application and have the app run successfully.
+Congratulations on getting this far in the workshop. As promised this section is your opportunity to reap on some AWS credits. In this workshop we have 4 challenges for you to try out. Each challenge relates to one functionality in the ML React App. Your job is to successfully connect the backend routes (lambda) through api to the web application and have the app run successfully.
 
 For reference as you complete the challenges your app should run similar to http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
 
 Good luck, remember the faster you complete the challenges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
+
+---
 
 #### Connect listgallery to React Frontend
 
@@ -396,9 +403,11 @@ This route will pull the existing images from your s3 to populate your gallery p
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/ImageGridList.js, on line 33 substitute 'REPLACE ME' with the invoke URL
+2. In frontend/src/Components/ImageGridList.js, on line 33 substitute **REPLACE ME** with the invoke URL
 
 3. Test the app. To test the listgallery feature goto the gallery page. If successful the images you uploaded via the upload page should now be rendering on the gallery page.
+
+---
 
 #### Connect delete to React Frontend
 
@@ -406,9 +415,11 @@ The delete feature will allow user from the webpage to delete and remove images 
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/ImageGridList.js, on line 43 substitute 'REPLACE ME' with the invoke URL.
+2. In frontend/src/Components/ImageGridList.js, on line 43 substitute **REPLACE ME** with the invoke URL.
 
 3. Test the app. To test the delete feature goto the gallery page. If you select one of the images, there should be an option to delete. If successful, when you select the button after the page has refreshed the image should now be gone.
+
+---
 
 #### Connect gallery detection to React Frontend
 
@@ -416,16 +427,20 @@ The gallery detection feature will allow user from the gallery to perform detect
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/ImageGridList.js, on line 58 substitute 'REPLACE ME' with the invoke URL.
+2. In frontend/src/Components/ImageGridList.js, on line 58 substitute **REPLACE ME** with the invoke URL.
 
 3. Test the app. To test the gallery detection goto the gallery page. On the top left of each image should be a tick icon. If you click it, if all things go well you should get back detection for the image.
+
+---
 
 #### Connect charts to React Frontend
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/Charts.js, on line 7 substitute 'REPLACE ME' with the invoke URL.
+2. In frontend/src/Components/Charts.js, on line 7 substitute **REPLACE ME** with the invoke URL.
 
 3. Test the app. To test the charts feature, goto the gallery page. If you have some images in the gallery the charts at the bottom should be populated with smile and age metrics. For example if you upload a 20 year old person smilling then you should have one unit for smilling and one unit for 20-39 year old on the charts.
+
+## AWSome you made it!!
 
 And that's it you've made it to the end. Let your trainer know so your in the running to get some AWS credits. Don't forget to complete the survey and join the AWS facebook group to keep up with all things AWS.
