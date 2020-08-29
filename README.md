@@ -163,10 +163,11 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 ```python
 import boto3
+from botocore.client import Config
 import json
 
 rekognition = boto3.client('rekognition')
-s3 = boto3.client('s3')
+s3 = boto3.client('s3', 'ap-southeast-2', config=Config(signature_version='s3v4'))
 bucket_name = "facial-detection-REPLACEME"
 expiration = 120
 
