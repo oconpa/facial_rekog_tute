@@ -108,13 +108,13 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 3. Name your bucket <pre>facial-detection-<b>Replace with your full name</b></pre>
 
 
-<i>Make sure you replace with your full name where indicated above</i>
+<i>Make sure you replace with your full name where indicated above, leave the rest of the options as default.</i>
 
-4. Click **Create**
+4. Click **Create** ( to the lower left, don't click next )
 
 ![Create S3](img/S3Create.png)
 
-5. Goto the bucket you just created, clicking on the **Permission** tab from within the bucket. You should then see four suboptions, go to **CORS configuration** and paste the following code:
+5. Click on the bucket you just created, clicking on the **Permission** tab from within the bucket. You should then see four sub options, go to **CORS configuration** and paste the following code:
 
 ```html
 <?xml version="1.0" encoding="UTF-8"?>
@@ -148,7 +148,7 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 
 ![Lambda Image](img/lambdaCreate.png)
 
-5. Once created and inside the lambda, click into the **Permissions** tab. Under **Execution role** will be a role name, Click it.
+5. Once created and inside the lambda, click into the **Permissions** tab (located at the top of the lambda). Under **Execution role** (the first section under the new tab) will be a role name, Click it.
 
 6. In the newly opened window click on the blue button **Attach policies**. Using the search bar, search for the following policies, checking the boxes once you've found them.
 
@@ -157,9 +157,9 @@ Cloud 9 is AWS's cloud IDE making developing on the cloud much easier. Forget ab
 - AmazonRekognitionFullAccess
 ```
 
-7. Once both polcies have been checked, click **Attach policy**
+7. Once both policies have been checked, click **Attach policy**
 
-8. After attaching the policy go back to your lambda and under the **Configuration** tab in the function code section, paste:
+8. After attaching the policy go back to your lambda (it should already be open in your browser on another tab) and under the **Configuration** tab in the **function code** section (scroll down on the lambda until you see a suitable place to paste code), paste:
 
 ```python
 import boto3
@@ -167,7 +167,7 @@ import json
 
 rekognition = boto3.client('rekognition')
 s3 = boto3.client('s3')
-bucket_name = "facial-detection-patrickoconnor"
+bucket_name = "facial-detection-REPLACEME"
 expiration = 120
 
 def lambda_handler(event, context):
@@ -322,13 +322,18 @@ def doDelete(event):
 bucket_name = "facial-detection-johnsmith"
 ```
 
+<i>It's critical that this matches exactly that name of your bucket (case senstitive)</i>
+
 6. Click **Save**
 
 ## Create and Expose API Gateway
 
-We now need a way to expose the lambda function to the world, we can acomplish this with API Gateway. In the AWS Console search for 'api gateway' or click [here](https://ap-southeast-2.console.aws.amazon.com/apigateway/home?region=ap-southeast-2#/apis).
+We now need a way to expose the lambda function to the world, we can acomplish this with API Gateway. In the AWS Console, click "services" and serach for 'api gateway' or click [here](https://ap-southeast-2.console.aws.amazon.com/apigateway/home?region=ap-southeast-2#/apis).
 
-1. In the top right click "Create API". There will be a number of gateways to which we can choose from. We will be creating a REST API, so select "REST API" (**Note**: There are two version of REST API, don't choose the REST API private option ),  Click **Build**.
+1. There will be a number of gateways to which we can choose from. We will be creating a REST API, so select "REST API" (**Note**: There are two version of REST API, don't choose the REST API private option ),  Click **Build**. 
+
+<i>If you have never used API Gatwway before when you click build, make sure on the next screen in the "Create new API" section you have **New API** selected rather than **example API**. Must match the below image.
+</i>
 
 ![Create REST](img/restapi-1.png)
 
@@ -341,6 +346,8 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 ![Create resource](img/creatresource-1.png)
 
 4. Select the check box **Configure as proxy resource**. We want every request to be passed directly to the lambda function created, application code will take care of the http method. Click **Create Resource**
+
+<i>Do not name your resource, by checking the box the naming should automatically be populate with proxy</i>
 
 ![Create resource](img/creatresource-2.png)
 
@@ -360,18 +367,20 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 2. Great work, you've now finished your first page of features for your ML website. To test whether the functionality works we will try upload an image from the website. To do this we will need to kick off a local version of the site with the following code.
 
+<i>Only run this if you're the process running in your terminal has stopped, it should still be running from before.</i>
+
 ```shell
 npm run start
 ```
 
-<i>server might still be running if you didn't shut it down from earlier</i>
+3. Make sure you **Save** after editing files on cloud9.
 
-3. After the app has compiled successfully, click **Tools** in the toolbar up top, click **Preview** and finally click **Preview Running Application**. 
+4. After the app has compiled successfully, click **Tools** in the toolbar up top, click **Preview** and finally click **Preview Running Application**. 
    Open the preview in another tab by clicking the arrow / box button on the right of the search bar.
 
-4. In the app, you will need to navigate to the upload page by opening up the left drawer menu. Once on the page, try uploading an image using the upload interface; preferably a facial image, to test whether your /upload and /detect routes work. Make sure to click **Scan**.
+5. In the app, you will need to navigate to the upload page by opening up the left drawer menu. Once on the page, try uploading an image using the upload interface; preferably a facial image, to test whether your /upload and /detect routes work. Make sure to click **Scan**.
 
-5. If you've correctly followed the previous steps and all goes well, the site should save your image to the s3 with a json of detections and render the results, if their is at least one facial detection on the site.
+6. If you've correctly followed the previous steps and all goes well, the site should save your image to the s3 with a json of detections and render the results, if their is at least one facial detection on the site.
 
 ## Gallery Time
 
