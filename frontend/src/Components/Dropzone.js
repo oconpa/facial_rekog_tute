@@ -26,13 +26,13 @@ function MyDropzone() {
   const [uuid, setUuid] = useState(false)
 
   const onDrop = (event) => {
-    setUuid(short.generate())
     setPictures(event)
     setImage(true)
   }
 
   const uploadFile = async() => {
     setLoading(true)
+    setUuid(short.generate())
 
     const apiURL = 'REPLACE ME'
 
@@ -42,11 +42,13 @@ function MyDropzone() {
     const url = await res.json()
     
     // PUT the file directly to S3
+    console.log(url)
+    console.log(pictures[0])
     await fetch(url, {
                         method: 'put',
                         body: pictures[0],
                         headers: new Headers({
-                          'Content-Type': 'multipart/form-data'
+                          'Content-Type': 'image/*'
                         })
                       })
     
@@ -78,7 +80,7 @@ function MyDropzone() {
           withIcon={true}
           buttonText='Choose images'
           onChange={onDrop}
-          imgExtension={['.jpg', '.gif', '.png']}
+          imgExtension={['.jpg', '.gif', '.png', 'jpeg']}
           maxFileSize={5242880}
           singleImage={true}
         />
