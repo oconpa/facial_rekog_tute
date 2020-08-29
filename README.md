@@ -427,7 +427,8 @@ The gallery detection feature will allow user from the gallery to perform detect
 2. In frontend/src/Components/ImageGridList.js, on line 58 substitute 'REPLACE ME' with the invoke URL.
 
 3. Test the app. To test the gallery detection goto the gallery page. On the top left of each image should be a tick icon. If you click it, if all things go well you should get back detection for the image.
-<br>
+
+---
 
 #### Connect charts to React Frontend
 
