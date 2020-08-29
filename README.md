@@ -370,7 +370,7 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 2. Great work, you've now finished your first page of features for your ML website. To test whether the functionality works we will try upload an image from the website. To do this we will need to kick off a local version of the site with the following code.
 
-<i>Only run this if you're the process running in your terminal has stopped, it should still be running from before.</i>
+<i>Only run this if the process running in your terminal has stopped, it should still be running from before.</i>
 
 ```shell
 npm run start
