@@ -394,7 +394,8 @@ Congratulations on getting this far in the workshop. As promised this section is
 For reference as you complete the challenges your app should run similar to http://facial-hosting.s3-website-ap-southeast-2.amazonaws.com/
 
 Good luck, remember the faster you complete the challenges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
-<br>
+
+---
 
 #### Connect listgallery to React Frontend
 
@@ -405,7 +406,8 @@ This route will pull the existing images from your s3 to populate your gallery p
 2. In frontend/src/Components/ImageGridList.js, on line 33 substitute 'REPLACE ME' with the invoke URL
 
 3. Test the app. To test the listgallery feature goto the gallery page. If successful the images you uploaded via the upload page should now be rendering on the gallery page.
-<br>
+
+---
 
 #### Connect delete to React Frontend
 
@@ -416,7 +418,8 @@ The delete feature will allow user from the webpage to delete and remove images 
 2. In frontend/src/Components/ImageGridList.js, on line 43 substitute 'REPLACE ME' with the invoke URL.
 
 3. Test the app. To test the delete feature goto the gallery page. If you select one of the images, there should be an option to delete. If successful, when you select the button after the page has refreshed the image should now be gone.
-<br>
+
+---
 
 #### Connect gallery detection to React Frontend
 
