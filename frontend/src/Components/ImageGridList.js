@@ -54,6 +54,7 @@ function ImageGridList() {
 
     const showDetection = async(event) => {
         setLoading(true)
+        setDrawer(true)
         
         const apiURL = 'REPLACE ME'
         const detectURL = `${apiURL}/detect`
@@ -69,7 +70,6 @@ function ImageGridList() {
         }
         
         setLoading(false)
-        setDrawer(true)
     }
     
     const onCurrentImageChange = (index) => {

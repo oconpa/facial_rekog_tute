@@ -28,11 +28,11 @@ function MyDropzone() {
   const onDrop = (event) => {
     setPictures(event)
     setImage(true)
+    setUuid(short.generate())
   }
 
   const uploadFile = async() => {
     setLoading(true)
-    setUuid(short.generate())
 
     const apiURL = 'REPLACE ME'
 

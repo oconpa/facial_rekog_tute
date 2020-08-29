@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleAccordion(props) {
   const classes = useStyles();
-  const expanded = true
+  const expanded = false
 
   return (
       props.data ?
