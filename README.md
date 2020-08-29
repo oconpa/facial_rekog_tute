@@ -403,7 +403,7 @@ This route will pull the existing images from your s3 to populate your gallery p
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/ImageGridList.js, on line 33 substitute 'REPLACE ME' with the invoke URL
+2. In frontend/src/Components/ImageGridList.js, on line 33 substitute **REPLACE ME** with the invoke URL
 
 3. Test the app. To test the listgallery feature goto the gallery page. If successful the images you uploaded via the upload page should now be rendering on the gallery page.
 
@@ -415,7 +415,7 @@ The delete feature will allow user from the webpage to delete and remove images 
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/ImageGridList.js, on line 43 substitute 'REPLACE ME' with the invoke URL.
+2. In frontend/src/Components/ImageGridList.js, on line 43 substitute **REPLACE ME** with the invoke URL.
 
 3. Test the app. To test the delete feature goto the gallery page. If you select one of the images, there should be an option to delete. If successful, when you select the button after the page has refreshed the image should now be gone.
 
@@ -427,7 +427,7 @@ The gallery detection feature will allow user from the gallery to perform detect
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/ImageGridList.js, on line 58 substitute 'REPLACE ME' with the invoke URL.
+2. In frontend/src/Components/ImageGridList.js, on line 58 substitute **REPLACE ME** with the invoke URL.
 
 3. Test the app. To test the gallery detection goto the gallery page. On the top left of each image should be a tick icon. If you click it, if all things go well you should get back detection for the image.
 
@@ -437,7 +437,7 @@ The gallery detection feature will allow user from the gallery to perform detect
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
 
-2. In frontend/src/Components/Charts.js, on line 7 substitute 'REPLACE ME' with the invoke URL.
+2. In frontend/src/Components/Charts.js, on line 7 substitute **REPLACE ME** with the invoke URL.
 
 3. Test the app. To test the charts feature, goto the gallery page. If you have some images in the gallery the charts at the bottom should be populated with smile and age metrics. For example if you upload a 20 year old person smilling then you should have one unit for smilling and one unit for 20-39 year old on the charts.
 
