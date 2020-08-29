@@ -395,6 +395,7 @@ For reference as you complete the challenges your app should run similar to http
 
 Good luck, remember the faster you complete the challenges and show to your trainer, the more points you accumulate to win some AWS credits. Feel free to message you're designated breakout room AWS reps for hints and help.
 <br>
+
 #### Connect listgallery to React Frontend
 
 This route will pull the existing images from your s3 to populate your gallery page. It pulls and serves them up for the users to view.
@@ -405,6 +406,7 @@ This route will pull the existing images from your s3 to populate your gallery p
 
 3. Test the app. To test the listgallery feature goto the gallery page. If successful the images you uploaded via the upload page should now be rendering on the gallery page.
 <br>
+
 #### Connect delete to React Frontend
 
 The delete feature will allow user from the webpage to delete and remove images from the s3 bucket.
@@ -415,6 +417,7 @@ The delete feature will allow user from the webpage to delete and remove images 
 
 3. Test the app. To test the delete feature goto the gallery page. If you select one of the images, there should be an option to delete. If successful, when you select the button after the page has refreshed the image should now be gone.
 <br>
+
 #### Connect gallery detection to React Frontend
 
 The gallery detection feature will allow user from the gallery to perform detections on previous image by pressing the tick icon on the top left of each image.
@@ -425,6 +428,7 @@ The gallery detection feature will allow user from the gallery to perform detect
 
 3. Test the app. To test the gallery detection goto the gallery page. On the top left of each image should be a tick icon. If you click it, if all things go well you should get back detection for the image.
 <br>
+
 #### Connect charts to React Frontend
 
 1. Make sure you have the default **Invoke URL** copied into your clipboard from API Gateway, then goto your cloud 9.
