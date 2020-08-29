@@ -307,7 +307,7 @@ def doChart(event):
                         chart[0] += 1
                     else:
                         chart[1] += 1
-    
+
     return json.dumps(chart)
     
 # Delete Method
