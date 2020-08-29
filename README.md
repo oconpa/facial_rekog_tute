@@ -202,7 +202,7 @@ def doUpload(event):
         Params={
             'Bucket': bucket_name,
             'Key': event['queryStringParameters']['fileName'],
-            'ContentType': 'multipart/form-data'
+            'ContentType': 'image/*'
         },
         ExpiresIn=expiration)
         
