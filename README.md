@@ -7,8 +7,7 @@
 
 ***ML APP DEMO***
 
-
-![App Demo](img/hHv0y1ayU9.gif)
+![App Demo](img/DEMO.gif)
 
 ***App Link (Demo)***
 
