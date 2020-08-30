@@ -338,12 +338,12 @@ We now need a way to expose the lambda function to the world, we can acomplish t
 
 1. There will be a number of gateways to which we can choose from. We will be creating a REST API, so select "REST API" (**Note**: There are two version of REST API, don't choose the REST API private option ),  Click **Build**. 
 
-<i>If you have never used API Gatwway before when you click build, make sure on the next screen in the "Create new API" section you have **New API** selected rather than **example API**. Must match the below image.
-</i>
-
 ![Create REST](img/restapi-1.png)
 
 2. We will be creating a new REST API, give your API a name, "rekognition" will work for this example.  Then click **Create API**
+
+<i>If you have never used API Gatwway before when you click build, make sure on the next screen in the "Create new API" section you have **New API** selected rather than **example API**. Must match the below image.
+</i>
 
 ![Create REST](img/restapi-2.png)
 
