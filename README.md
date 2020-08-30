@@ -167,7 +167,10 @@ from botocore.client import Config
 import json
 
 rekognition = boto3.client('rekognition')
-s3 = boto3.client('s3', 'ap-southeast-2', config=Config(signature_version='s3v4'))
+s3 = boto3.client('s3', 
+    endpoint_url=f'https://s3.ap-southeast-2.amazonaws.com', 
+    config=Config(s3={'addressing_style': 'virtual'})
+    )
 bucket_name = "facial-detection-REPLACEME"
 expiration = 120
 
