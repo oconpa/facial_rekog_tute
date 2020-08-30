@@ -384,6 +384,8 @@ npm run start
 4. After the app has compiled successfully, click **Tools** in the toolbar up top, click **Preview** and finally click **Preview Running Application**. 
    Open the preview in another tab by clicking the arrow / box button on the right of the search bar.
 
+![ReactExpand](img/ReactExpand.png)
+
 5. In the app, you will need to navigate to the upload page by opening up the left drawer menu. Once on the page, try uploading an image using the upload interface; preferably a facial image, to test whether your /upload and /detect routes work. Make sure to click **Scan**.
 
 6. If you've correctly followed the previous steps and all goes well, the site should save your image to the s3 with a json of detections and render the results, if their is at least one facial detection on the site.
