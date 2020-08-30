@@ -390,7 +390,7 @@ npm run start
 
 6. If you've correctly followed the previous steps and all goes well, the site should save your image to the s3 with a json of detections and render the results, if their is at least one facial detection on the site.
 
-<b>Note: </b><i>The results should return in a few seconds, if you're waiting for a while and it has not given you back a notification make sure to clear your browsers cache, as this can sometimes interfere. You can do this by going to your browsers history option, select advance clearing and clear history</i>
+<b>Note: </b><i>The results should return in a few seconds, if you're waiting for a while check to make sure the invoke link you copied is correct or that your lambda code is fomratted correctly (python is whitespace sensitive).</i>
 
 ## Gallery Time
 
