@@ -41,7 +41,7 @@ function ImageGridList() {
         //Extract the image ID for deletion
         const imageId = IMAGES[currentImage].src.split("=")[0].split("/")[3].split("?")[0]
         const apiURL = 'REPLACE ME'
-        const deleteURL = `${apiURL}/delete/${imageId}`
+        const deleteURL = `${REPLACE ME}/delete/${imageId}`
         
         await fetch(deleteURL, { method: 'DELETE'})
         
