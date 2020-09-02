@@ -54,13 +54,13 @@ function ImageGridList() {
 
     const showDetection = async(event) => {
         setLoading(true)
-        setDrawer(true)
+        setDrawer('REPLACE ME')
         
         const apiURL = 'REPLACE ME'
         const detectURL = `${REPLACE ME}/detect`
         const imageId = IMAGES[event].src.split('/')[3].split('?')[0]
         
-        const res = await fetch(detectURL, { method: 'POST', body: imageId })
+        const res = await fetch('REPLACE ME', { method: 'POST', body: imageId })
         const data = await res.json()
         
         if (data.FaceDetails.length) {
