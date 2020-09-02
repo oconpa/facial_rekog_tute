@@ -4,22 +4,21 @@ import { Bar } from 'react-chartjs-2';
 function Chart() {
     const [age, setAge] = useState([0, 0, 0, 0, 0, 0])
     const [smile, setSmile] = useState([0, 0])
-    const apiURL = 'REPLACE ME'
     
     async function getCharts(type) {
-        const chartURL = `${apiURL}/charts`
-        const chartResult = await fetch(chartURL,
+        const chartURL = 'REPLACE ME'
+        const chartResult = await fetch('REPLACE ME',
             {
                 method: "POST",
                 body: type
             })
-        const detectionData = await chartResult.json()
+        const detectionData = await 'REPLACE ME'.json()
         switch(type) {
             case 'age':
                 setAge({
                     labels: ['0-19', '20-39', '40-49', '50-69', '70-89', '90+'],
                     datasets: [{
-                        data: detectionData,
+                        data: 'REPLACE ME',
                         label: '# per Age Range',
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -45,7 +44,7 @@ function Chart() {
                 setSmile({
                     labels: ['Smiles', 'No Smiles'],
                     datasets: [{
-                        data: detectionData,
+                        data: 'REPLACE ME',
                         label: '# of Smiles',
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -65,20 +64,20 @@ function Chart() {
     }
 
     useEffect(() => {
-        getCharts('age')
-        getCharts('smile')
+//         getCharts('REPLACE ME')
+//         getCharts('REPLACE ME')
     }, [])
     
     return (
             <div style={{width: '100%', display: 'flex', paddingTop: 50}}>
                 <span style={{width: '100%'}}>
                     <Bar
-                      data={age}
+                      data={'REPLACE ME'}
                     />
                 </span>
                 <span style={{width: '100%'}}>
                     <Bar
-                      data={smile}
+                      data={'REPLACE ME'}
                     />
                 </span>
             </div>
